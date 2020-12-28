@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app
 
-website = Blueprint("website", __name__)
+website = Blueprint("website", __name__, template_folder="../templates")
 
 
 @website.route("/")

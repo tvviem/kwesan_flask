@@ -1,61 +1,46 @@
 import os
 
-# Grabs the folder where the script runs.
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# Only cfg is here ..
-class AppConfig(object):
 
-    THEME = "phantom"  # 'argon-dashboard'
-
-    STATIC = "static"
-    DATE_FORMAT = "%Y-%m-%d"
-    SECRET_KEY = "SuperSecret_77554##@3"  # save yours here
-
-
-class Config(AppConfig):
-    """
-    Configuration base, for all environments.
-    """
-
-    DEBUG = False
-    TESTING = False
-    BOOTSTRAP_FONTAWESOME = True
-    CSRF_ENABLED = True
-
+class Config:
+    SECRET_KEY = os.environ.get("SECRET_KEY") or "hard to guess string"
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.googlemail.com")
+    MAIL_PORT = int(os.environ.get("MAIL_PORT", "587"))
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "true").lower() in ["true", "on", "1"]
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+    FLASKY_MAIL_SUBJECT_PREFIX = "[Flasky]"
+    FLASKY_MAIL_SENDER = "Flasky Admin <trieuvinhviem@gmail.com>"
+    FLASKY_ADMIN = os.environ.get("FLASKY_ADMIN")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-
-class ProductionConfig(Config):
-
-    APP = "PATH_FOR_PRODUCTION"
-    APP_IMG_FOLDER = os.path.join(APP, "static", "images")
-
-    # RECAPTCHA keys (production)
-    RECAPTCHA_PUBLIC_KEY = "1234_abcd"
-    RECAPTCHA_PRIVATE_KEY = "1234_xyzw"
-
-    # SQLALCHEMY_DATABASE_URI = "mysql+pymysql://db_user:db_pass@localhost/db_name"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "database.db")
-
-    SERVER_NAME = "www.yourdomain.us"
-    DEBUG = False
-    TESTING = False
+    @staticmethod
+    def init_app(app):
+        pass
 
 
 class DevelopmentConfig(Config):
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DEV_DATABASE_URL"
+    ) or "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")
 
-    APP = "app"
-    APP_IMG_FOLDER = os.path.join(APP, "static", "images")
 
-    # keys for dev [ http://localhost ]
-    RECAPTCHA_PUBLIC_KEY = "1234_abcd"
-    RECAPTCHA_PRIVATE_KEY = "1234_xyzw"
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL") or "sqlite://"
 
-    # SQLALCHEMY_DATABASE_URI = "mysql+pymysql://MYSQL_USER:MYSQL_PASS@localhost/MYSQL_DATABASE"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "database.db")
 
-    SERVER_NAME = "localhost:5000"
-    DEBUG = False
-    TESTING = False
-    FORCE_HTTPS = False
+class ProductionConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL"
+    ) or "sqlite:///" + os.path.join(basedir, "data.sqlite")
+
+
+config = {
+    "development": DevelopmentConfig,
+    "testing": TestingConfig,
+    "production": ProductionConfig,
+    "default": DevelopmentConfig,
+}
