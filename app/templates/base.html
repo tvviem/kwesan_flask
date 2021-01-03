@@ -13,7 +13,7 @@
   <!--Core CSS -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bulma.min.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/kwesan.css') }}">
-
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" />
   {% if title %}
   <title>Kwesan System - {{ title }} </title>
   {% else %}
@@ -24,11 +24,8 @@
 
 <body>
   {% block content %} {% endblock %}
-  {% block footer %}
-  <footer>
-    &copy; Copyright 2021 by <a href="https://sites.google.com/site/tvviem/">Viem Trieu</a>.
-  </footer>
-  {% endblock %}
+
+  <script src="{{ url_for('static', filename='js/utilities.js') }}"></script>
 </body>
 
 </html>

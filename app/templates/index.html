@@ -1,9 +1,7 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h1>
-  TRANG THONG TIN GIOI THIEU HE THONG
-</h1>
-{% endblock %}
-{% block footer %}
-<!-- Set footer null; if u wanna use footer existing, u can insert {{ super() }} here and more design -->
+{% include 'partials/navbar.html' ignore missing with context %}
+{% include 'partials/intro.html' ignore missing with context %}
+{% include 'partials/footer.html' ignore missing with context %}
 {% endblock %}
