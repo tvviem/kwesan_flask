@@ -1,7 +1,31 @@
 {% extends "base.html" %}
 {% block title %} USER LOGIN {% endblock %}
 {% block content %}
-<h1>
-  DANG NHAP HE THONG
-</h1>
+<section class="hero is-fullheight is-light">
+  <div class="hero-body has-text-centered">
+    <div class="container">
+      <div class="columns is-centered is-mobile">
+        <div class="column is-5-tablet is-4-desktop is-3-widescreen is-two-thirds-mobile box">
+          <h4 class="title has-text-grey is-4">ĐĂNG NHẬP</h4>
+          <form action="/user/login" method="POST">
+            <div class="field">
+              <div class="control has-icons-left"><input class="input" type="text" placeholder="Tên đăng nhập"
+                  autofocus="autofocus" autocomplete="autocomplete" name="username" required="required" /><span
+                  class="icon is-small is-left"><i class="fas fa-user"></i></span></div>
+            </div>
+            <div class="field">
+              <div class="control has-icons-left"><input class="input" type="password" placeholder="Mật khẩu"
+                  name="password" required="required" autocomplete="autocomplete" /><span
+                  class="icon is-small is-left"><i class="fas fa-key"></i></span></div>
+            </div>
+            <div class="field"><button class="button is-primary is-fullwidth">Đăng nhập</button></div>
+            <div class="field"><a class="button is-link is-light is-fullwidth" href="{{ url_for('index.index') }}">Trang
+                chủ</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}
