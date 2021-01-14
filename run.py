@@ -8,10 +8,9 @@ from app.models import User
 # from flask import current_app as app
 app = create_app("development")
 
-
+"""
 @app.route("/user", methods=["GET"])
 def user_records():
-    """Create a user via query string parameters."""
     username = request.args.get("user")
     email = request.args.get("email")
     print(username, email)
@@ -33,7 +32,7 @@ def user_records():
         db.session.commit()  # Commits all changes
         redirect(url_for("login"))
     return render_template("user.login", users=User.query.all(), title="Show Users")
-
+ """
 
 if __name__ == "__main__":
     # print(app.config.get("SECRET_KEY"))

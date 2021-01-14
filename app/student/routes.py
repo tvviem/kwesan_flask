@@ -5,4 +5,4 @@ studentPage = Blueprint("student", __name__, template_folder="../templates")
 
 @studentPage.route("/")
 def student_home():
-    return render_template("student/index.html")
+    return render_template("student/index.html", hasNavbar=True)

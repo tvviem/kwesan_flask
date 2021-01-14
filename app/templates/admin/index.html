@@ -1,7 +1,62 @@
 {% extends "base.html" %}
-{% block title %} Dashboard administration {% endblock %}
 {% block content %}
-<h1>
-  This is a content of Dashboard admin
-</h1>
+<nav class="navbar is-fixed-top is-dark has-shadow" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+
+    <a role="button" class="navbar-burger m-0 is-hidden-tablet" aria-label="menu" aria-expanded="false"
+      data-target="leftSideBar">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+    <a class="navbar-item" href="http://blu.edu.vn">
+      <img src="{{ url_for('static', filename='images/LOGO_BLU_2inch.png')}}" width="32" height="32">
+    </a>
+    <a href="#" class="navbar-item is-hidden-mobile">
+      Admin Dashboard
+    </a>
+    <!-- navbar-burger is a humburger menu that only appears on touch devices -->
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navBar">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div class="navbar-menu" id="navBar">
+    <div class="navbar-end">
+      <a class="navbar-item" href="{{ url_for('user.register') }}"> <span class="icon"><i
+            class="fas fa-user-plus"></i></span>&nbsp;&nbsp;Hồ sơ</a>
+      <a class="navbar-item" href="{{ url_for('user.login') }}"> <span class="icon"><i
+            class="fas fa-sign-in-alt"></i></span>&nbsp;&nbsp;Đăng xuất</a>
+    </div>
+  </div>
+</nav>
+<section class="section py-3">
+  <div class="columns">
+    <div class="column is-2-desktop is-3-tablet is-hidden-mobile" id="leftSideBar">
+      <aside class="menu">
+        <p class="menu-label">Quản lý chung</p>
+        <ul class="menu-list">
+          <li><a class="is-active">Tổng quan</a></li>
+          <li><a href="#">Người dùng</a></li>
+          <li><a>Câu hỏi</a></li>
+        </ul>
+        <p class="menu-label">Đặc quyền</p>
+        <ul class="menu-list">
+          <li><a>Truy cập</a></li>
+          <li><a>Câu hỏi</a>
+            <ul>
+              <li><a>Thêm câu hỏi</a></li>
+              <li><a>Tìm sửa/xóa</a></li>
+            </ul>
+          </li>
+        </ul>
+      </aside>
+    </div>
+    <div class="column is-10-desktop is-9-tablet">
+      Second column
+    </div>
+  </div>
+</section>
 {% endblock %}

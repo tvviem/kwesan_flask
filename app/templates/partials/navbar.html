@@ -1,21 +1,19 @@
 <nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation">
-  <div class="container">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="http://blu.edu.vn">
-        <img src="{{ url_for('static', filename='images/LOGO_BLU_2inch.png')}}" width="32" height="32">
-      </a>
-      <a class="navbar-item has-text-weight-bold" href="/">QuizSysBLU</a>
-      <a class="navbar-burger" data-target="navMenu"><span></span><span></span><span></span></a>
-    </div>
-    <div class="navbar-menu" id="navMenu">
-      <div class="navbar-start"><a class="navbar-item" href="/guides"><span class="icon"><i
-              class="fab fa-glide-g"></i></span>&nbsp;Hướng dẫn</a></div>
-      <div class="navbar-end">
-        <a class="navbar-item" href="{{ url_for('user.register') }}"> <span class="icon"><i
-              class="fas fa-user-plus"></i></span>&nbsp;Đăng ký</a>
-        <a class="navbar-item" href="{{ url_for('user.login') }}"> <span class="icon"><i
-              class="fas fa-sign-in-alt"></i></span>&nbsp;Đăng nhập</a>
-      </div>
+  <div class="navbar-brand">
+    <a class="navbar-item" href="http://blu.edu.vn">
+      <img src="{{ url_for('static', filename='images/LOGO_BLU_2inch.png')}}" width="32" height="32">
+    </a>
+    <a class="navbar-item has-text-weight-bold" href="/">QuizSysBLU</a>
+    <a class="navbar-burger" data-target="navMenu"><span></span><span></span><span></span></a>
+  </div>
+  <div class="navbar-menu" id="navMenu">
+    <div class="navbar-start"><a class="navbar-item" href="/guides"><span class="icon"><i
+            class="fab fa-glide-g"></i></span>&nbsp;&nbsp;Hướng dẫn</a></div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{{ url_for('user.register') }}"> <span class="icon"><i
+            class="fas fa-user-plus"></i></span>&nbsp;&nbsp;Đăng ký</a>
+      <a class="navbar-item" href="{{ url_for('user.login') }}"> <span class="icon"><i
+            class="fas fa-sign-in-alt"></i></span>&nbsp;&nbsp;Đăng nhập</a>
     </div>
   </div>
 </nav>

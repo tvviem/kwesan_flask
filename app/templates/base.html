@@ -22,10 +22,16 @@
   {% endblock %}
 </head>
 
-<body>
-  {% block content %} {% endblock %}
+{%if hasNavbar %}
 
-  <script src="{{ url_for('static', filename='js/utilities.js') }}"></script>
-</body>
+<body class='has-navbar-fixed-top'>
+  {%else%}
+
+  <body>
+    {%endif%}
+    {% block content %} {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/utilities.js') }}"></script>
+  </body>
 
 </html>

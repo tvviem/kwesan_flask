@@ -4,5 +4,5 @@ admin = Blueprint("admin", __name__, template_folder="../templates")
 
 
 @admin.route("/")
-def admin_home():
-    return render_template("admin/index.html")
+def home():
+    return render_template("admin/index.html", title="Admin dashboard", hasNavbar=True)

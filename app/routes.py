@@ -7,14 +7,14 @@ indexPage = Blueprint("index", __name__, template_folder="templates")
 
 @indexPage.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", hasNavbar=True)
 
 
 @userPage.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    return render_template("login.html", hasNavbar=False)
 
 
 @userPage.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("signup.html")
+    return render_template("signup.html", hasNavbar=False)
