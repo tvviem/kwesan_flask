@@ -2,7 +2,6 @@ from app import create_app
 
 from flask import request, render_template, make_response, url_for, redirect
 from datetime import datetime as dt
-from app import db
 from app.models import User
 
 # from flask import current_app as app

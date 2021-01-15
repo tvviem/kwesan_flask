@@ -4,7 +4,6 @@ from .admin.routes import admin
 from .lecturer.routes import lecturer
 from .api.routes import api
 from .student.routes import studentPage
-from extensions import *
 from config import config
 from .routes import userPage, indexPage
 from flask_sqlalchemy import SQLAlchemy
@@ -27,6 +26,7 @@ def create_app(config_name):
     # Initialise extensions
     # mongo.init_app(app)
     # print(app.config["SQLALCHEMY_DATABASE_URI"])
+
     with app.app_context():
         db.create_all()
         app.register_blueprint(admin, url_prefix="/admin")

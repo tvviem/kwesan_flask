@@ -1,37 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<nav class="navbar is-fixed-top is-dark has-shadow" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-
-    <a role="button" class="navbar-burger m-0 is-hidden-tablet" aria-label="menu" aria-expanded="false"
-      data-target="leftSideBar">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-    <a class="navbar-item" href="http://blu.edu.vn">
-      <img src="{{ url_for('static', filename='images/LOGO_BLU_2inch.png')}}" width="32" height="32">
-    </a>
-    <a href="#" class="navbar-item is-hidden-mobile">
-      Admin Dashboard
-    </a>
-    <!-- navbar-burger is a humburger menu that only appears on touch devices -->
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navBar">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-
-  <div class="navbar-menu" id="navBar">
-    <div class="navbar-end">
-      <a class="navbar-item" href="{{ url_for('user.register') }}"> <span class="icon"><i
-            class="fas fa-user-plus"></i></span>&nbsp;&nbsp;Hồ sơ</a>
-      <a class="navbar-item" href="{{ url_for('user.login') }}"> <span class="icon"><i
-            class="fas fa-sign-in-alt"></i></span>&nbsp;&nbsp;Đăng xuất</a>
-    </div>
-  </div>
-</nav>
+{% include 'partials/admin/navbarAdmin.html' ignore missing with context %}
 <section class="section py-3">
   <div class="columns">
     <div class="column is-2-desktop is-3-tablet is-hidden-mobile" id="leftSideBar">
