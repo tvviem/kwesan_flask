@@ -131,3 +131,5 @@ dmypy.json
 .jsbeautifyrc
 # ignore sass of bulmacss for custom its variables
 app/static/sass
+
+migrations
