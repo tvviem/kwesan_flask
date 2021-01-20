@@ -6,11 +6,7 @@ from .api.routes import api
 from .student.routes import studentPage
 from config import config
 from .routes import userPage, indexPage
-from flask_sqlalchemy import SQLAlchemy
-
-# from flask_assets import Environment, Bundle
-# from .util.assets import bundles
-db = SQLAlchemy()
+from extensions import db, bcrypt
 
 
 def create_app(config_name):
@@ -18,12 +14,13 @@ def create_app(config_name):
     # static_url_path set for showing client, static_folder for server directory
     app = Flask(__name__, static_url_path="/public", static_folder="static")
     app.config.from_object(config[config_name])
-    db.init_app(app)
     # assets = Environment(app)
     # assets.debug = True
     # assets.register(bundles)
 
-    # Initialise extensions
+    # Initialise from extensions
+    db.init_app(app)
+    bcrypt.init_app(app)
     # mongo.init_app(app)
     # print(app.config["SQLALCHEMY_DATABASE_URI"])
 

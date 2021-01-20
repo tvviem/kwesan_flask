@@ -1,4 +1,4 @@
-from . import db
+from extensions import db, bcrypt
 import enum, datetime
 
 
@@ -23,7 +23,10 @@ class User(db.Model):
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
     )
     role = db.Column(db.Enum(RoleType), index=True, nullable=False)
-    questions = db.relationship("Question", backref="users", lazy=True)
+    confirmed = db.Column(db.Boolean, default=False, nullable=False)
+    confirmed_on = db.Column(db.DateTime, nullable=True)
+
+    questions = db.relationship("Question", backref="user_questions", lazy=True)
 
     def __init__(
         self, firstname, lastname, username, email, password, major, aboutuser, role
@@ -32,7 +35,8 @@ class User(db.Model):
         self.lastname = lastname
         self.username = username
         self.email = email
-        self.password = password
+        # decode to ensure that our passwords are stored in db with proper character encoding
+        self.password = bcrypt.generate_password_hash(password).decode("UTF-8")
         self.major = major
         self.aboutuser = aboutuser
         self.role = role
@@ -63,12 +67,12 @@ class Question(db.Model):
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
     )
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    choices = db.relationship("Ref_Choices", backref="questions", lazy=True)
+    choices = db.relationship("Choice", backref="question_choices", lazy=True)
     useranswers = db.relationship(
         "User",
         secondary=userAnswer,
         lazy="subquery",
-        backref=db.backref("questions", lazy=True),
+        backref=db.backref("question_user_answer", lazy=True),
     )
 
 
@@ -98,4 +102,5 @@ userParticipate = db.Table(
     ),
     db.Column("started_time", db.DateTime, server_default=db.func.now()),
     db.Column("finished_time", db.DateTime, nullable=True),
+    db.Column("result", db.Float, nullable=True, default=0),
 )
