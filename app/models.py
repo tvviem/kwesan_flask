@@ -8,27 +8,27 @@ class RoleType(enum.Enum):
     LECT = "Lecturer"
 
 
-# participates_table = db.Table(
-#     "participates",
-#     db.Column("id", db.Integer, primary_key=True, autoincrement=True),
-#     db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
-#     db.Column("questionset_id", db.Integer, db.ForeignKey("questionsets.id")),
-#     db.Column("started_time", db.DateTime, server_default=db.func.now()),
-#     db.Column("finished_time", db.DateTime, nullable=True),
-#     db.Column("result", db.Float, nullable=True, default=0),
-# )
+UserParticipate = db.Table(
+    "participates",
+    db.Column("id", db.Integer, primary_key=True, autoincrement=True),
+    db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
+    db.Column("questionset_id", db.Integer, db.ForeignKey("questionsets.id")),
+    db.Column("started_time", db.DateTime, server_default=db.func.now()),
+    db.Column("finished_time", db.DateTime, nullable=True),
+    db.Column("result", db.Float, nullable=True, default=0),
+)
 
 
-class UserParticipate(db.Model):
-    __tablename__ = "participates"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
-    questionset_id = db.Column(
-        db.Integer, db.ForeignKey("questionsets.id", ondelete="CASCADE")
-    )
-    started_time = db.Column(db.DateTime, server_default=db.func.now())
-    finished_time = db.Column(db.DateTime, nullable=True)
-    result = db.Column(db.Float, nullable=True, default=0)
+# class UserParticipate(db.Model):
+#     __tablename__ = "participates"
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+#     questionset_id = db.Column(
+#         db.Integer, db.ForeignKey("questionsets.id", ondelete="CASCADE")
+#     )
+#     started_time = db.Column(db.DateTime, server_default=db.func.now())
+#     finished_time = db.Column(db.DateTime, nullable=True)
+#     result = db.Column(db.Float, nullable=True, default=0)
 
 
 class User(db.Model):
@@ -41,7 +41,7 @@ class User(db.Model):
     lastname = db.Column(db.Unicode(35), index=False, nullable=False)
     username = db.Column(db.String(80), index=True, unique=True, nullable=False)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
-    password = db.Column(db.String(60), index=False, nullable=False)
+    password = db.Column(db.String(80), index=False, nullable=False)
     major = db.Column(db.Unicode(50), index=False, nullable=False)
     aboutuser = db.Column(db.Unicode(100), index=False, nullable=True)
     created_on = db.Column(db.DateTime, server_default=db.func.now())
@@ -75,6 +75,9 @@ class User(db.Model):
         self.major = major
         self.aboutuser = aboutuser
         self.role = role
+
+    def verify_password(self, password):
+        return bcrypt.check_password_hash(self.password, password=password)
 
     def __repr__(self):  # use for representing object when printed
         return "{} {}".format(self.lastname, self.firstname)

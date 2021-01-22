@@ -1,71 +1,81 @@
 <section class="hero is-fullheight is-light">
   <div class="hero-body">
     <div class="container">
-      <form>
-        <div class="columns is-centered is-mobile">
-          <div class="column is-6-tablet is-8-desktop is-6-widescreen is-two-thirds-mobile box">
-            <h4 class="title is-4 has-text-centered">ĐĂNG KÝ NGƯỜI DÙNG</h4>
+      <div class="columns is-centered is-mobile">
+        <div class="column is-6-tablet is-8-desktop is-6-widescreen is-two-thirds-mobile box">
+          <h4 class="title is-4 has-text-centered">ĐĂNG KÝ NGƯỜI DÙNG</h4>
+          <form action="{{ url_for('user.register') }}" method="POST">
             <div class="columns">
+              {% include 'partials/messages.html' ignore missing with context %}
               <div class="column">
-                <div class="field"><label class="label">Họ và chữ đệm</label>
-                  <div class="control has-icons-left"><input class="input" type="text" autofocus="autofocus"
-                      placeholder="vd: Nguyễn Hữu" autocomplete="autocomplete" /><span class="icon is-small is-left"><i
-                        class="far fa-user"></i></span></div>
+                <div class="field">
+                  {{ form.last_name.label(class="label") }}
+                  <div class="control has-icons-left">
+                    {{ form.last_name(class="input") }}
+                    <span class="icon is-small is-left"><i class="far fa-user"></i></span>
+                  </div>
                 </div>
-                <div class="field"><label class="label">Tên</label>
-                  <div class="control has-icons-left"><input class="input" type="text" placeholder="vd: Học"
-                      autofocus="autofocus" autocomplete="autocomplete" /><span class="icon is-small is-left"><i
-                        class="far fa-user"></i></span></div>
+                <div class="field">
+                  {{ form.first_name.label(class="label") }}
+                  <div class="control has-icons-left">
+                    {{ form.first_name(class="input") }}
+                    <span class="icon is-small is-left"><i class="far fa-user"></i></span>
+                  </div>
                 </div>
-                <div class="field"><label class="label">Email</label>
-                  <div class="control has-icons-left"><input class="input" type="email"
-                      placeholder="vd: nhhoc@gmail.com" autofocus="autofocus" autocomplete="autocomplete"
-                      title="Hãy cung cấp email bạn đang sử dụng!" /><span class="icon is-small is-left"><i
-                        class="far fa-envelope"></i></span></div>
+                <div class="field">
+                  {{ form.email.label(class="label") }}
+                  <div class="control has-icons-left">
+                    {{ form.email(class="input") }}
+                    <span class="icon is-small is-left"><i class="far fa-envelope"></i></span>
+                  </div>
                 </div>
               </div>
               <div class="column">
-                <div class="field"><label class="label">Định danh đăng nhập</label>
-                  <div class="control has-icons-left"><input class="input" type="text" placeholder="vd: nhhoc"
-                      autofocus="autofocus" autocomplete="autocomplete"
-                      title="Bắt đầu là ký tự chữ, không chứa khoảng trắng" /><span class="icon is-small is-left"><i
-                        class="fas fa-user-tag"></i></span></div>
-                </div>
-                <div class="field"><label class="label">Mật khẩu</label>
-                  <div class="control has-icons-left"><input class="input" type="password" autocomplete="autocomplete"
-                      placeholder="Mật khẩu" /><span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+                <div class="field">
+                  {{ form.user_name.label(class="label") }}
+                  <div class="control has-icons-left">
+                    {{ form.user_name(class="input") }}
+                    <span class="icon is-small is-left"><i class="fas fa-user-tag"></i></span>
                   </div>
                 </div>
-                <div class="field"><label class="label">Nhập lại mật khẩu</label>
-                  <div class="control has-icons-left"><input class="input" type="password" autocomplete="autocomplete"
-                      placeholder="Xác nhận lại" /><span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+                <div class="field">
+                  {{ form.password.label(class="label") }}
+                  <div class="control has-icons-left">
+                    {{ form.password(class="input") }}
+                    <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+                  </div>
+                </div>
+                <div class="field">
+                  {{ form.confirm_pass.label(class="label") }}
+                  <div class="control has-icons-left">
+                    {{ form.confirm_pass(class="input") }}
+                    <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="field"><label class="label">Ngành học</label>
+            <div class="field">
+              {{ form.major.label(class="label") }}
               <div class="control has-icons-left">
-                <div class="select is-info is-fullwidth"><select>
-                    <option>Công nghệ thông tin</option>
-                    <option>Ngôn ngữ Anh</option>
-                    <option>Quản trị kinh doanh</option>
-                    <option>Sư phạm</option>
-                    <option>Khác</option>
-                  </select></div>
+                <div class="select is-info is-fullwidth">
+                  {{ form.major }}
+                </div>
                 <div class="icon is-small is-left"><i class="fas fa-user-graduate"></i></div>
               </div>
             </div>
-            <div class="field"><label class="label">Tóm tắt bản thân</label>
-              <div class="control"><textarea class="textarea is-info" placeholder="Sinh viên năm mấy? Khoa, trường học?"
-                  rows="3"></textarea></div>
+            <div class="field">
+              {{ form.about_user.label(class="label") }}
+              <div class="control">
+                {{ form.about_user(class="textarea is-info") }}
+              </div>
             </div>
             <div class="field is-grouped is-grouped-centered">
-              <p class="control"><a class="button is-link">Đăng ký</a></p>
-              <p class="control"><a class="button is-link is-light">Trở về</a></p>
+              <p class="control">{{ form.submit(class="button is-link")}} </p>
+              <p class="control"><a class="button is-link is-light" title="Về trang chủ">Trở về</a></p>
             </div>
-          </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </section>
