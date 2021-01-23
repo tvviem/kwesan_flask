@@ -16,6 +16,14 @@ class Config:
     FLASKY_MAIL_SENDER = "Flasky Admin <trieuvinhviem@gmail.com>"
     FLASKY_ADMIN = os.environ.get("FLASKY_ADMIN")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    RECAPTCHA_PUBLIC_KEY = (
+        os.environ.get("RECAPTCHA_PUBLIC_KEY")
+        or "6LdynTgaAAAAACoZ-uguxC8EeoaeXR_QobVnVbxi"
+    )
+    RECAPTCHA_PRIVATE_KEY = (
+        os.environ.get("RECAPTCHA_PRIVATE_KEY")
+        or "6LdynTgaAAAAAFGAbpoAcaIjWsiZ6wVYpLxO8733"
+    )
 
     @staticmethod
     def init_app(app):
@@ -25,6 +33,7 @@ class Config:
 class DevelopmentConfig(Config):
     ENV = "development"
     DEBUG = True
+    TESTING = False  # use for enable/disable google recaptcha, if TRUE, then ignore check captcha
     # SQLALCHEMY_DATABASE_URI = os.environ.get(
     #     "DEV_DATABASE_URL"
     # )  or "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")

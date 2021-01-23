@@ -1,3 +1,4 @@
+{% from "partials/_formhelpers.html" import render_error %}
 <section class="hero is-fullheight is-light">
   <div class="hero-body">
     <div class="container">
@@ -5,8 +6,8 @@
         <div class="column is-6-tablet is-8-desktop is-6-widescreen is-two-thirds-mobile box">
           <h4 class="title is-4 has-text-centered">ĐĂNG KÝ NGƯỜI DÙNG</h4>
           <form action="{{ url_for('user.register') }}" method="POST">
+            {{ form.csrf_token }}
             <div class="columns">
-              {% include 'partials/messages.html' ignore missing with context %}
               <div class="column">
                 <div class="field">
                   {{ form.last_name.label(class="label") }}
@@ -14,6 +15,7 @@
                     {{ form.last_name(class="input") }}
                     <span class="icon is-small is-left"><i class="far fa-user"></i></span>
                   </div>
+                  {{ render_error(form.last_name) }}
                 </div>
                 <div class="field">
                   {{ form.first_name.label(class="label") }}
@@ -21,6 +23,7 @@
                     {{ form.first_name(class="input") }}
                     <span class="icon is-small is-left"><i class="far fa-user"></i></span>
                   </div>
+                  {{ render_error(form.first_name) }}
                 </div>
                 <div class="field">
                   {{ form.email.label(class="label") }}
@@ -28,6 +31,7 @@
                     {{ form.email(class="input") }}
                     <span class="icon is-small is-left"><i class="far fa-envelope"></i></span>
                   </div>
+                  {{ render_error(form.email) }}
                 </div>
               </div>
               <div class="column">
@@ -37,6 +41,7 @@
                     {{ form.user_name(class="input") }}
                     <span class="icon is-small is-left"><i class="fas fa-user-tag"></i></span>
                   </div>
+                  {{ render_error(form.user_name) }}
                 </div>
                 <div class="field">
                   {{ form.password.label(class="label") }}
@@ -44,6 +49,7 @@
                     {{ form.password(class="input") }}
                     <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
                   </div>
+                  {{ render_error(form.password) }}
                 </div>
                 <div class="field">
                   {{ form.confirm_pass.label(class="label") }}
@@ -69,6 +75,7 @@
                 {{ form.about_user(class="textarea is-info") }}
               </div>
             </div>
+            {{ form.recaptcha }}
             <div class="field is-grouped is-grouped-centered">
               <p class="control">{{ form.submit(class="button is-link")}} </p>
               <p class="control"><a class="button is-link is-light" title="Về trang chủ">Trở về</a></p>

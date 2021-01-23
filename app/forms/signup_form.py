@@ -1,6 +1,14 @@
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, SelectField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
+
+MAJOR_CHOICES = [
+    ("1", "Công nghệ thông tin"),
+    ("2", "Ngôn ngữ Anh"),
+    ("3", "Quản trị kinh doanh"),
+    ("4", "Sư phạm"),
+    ("5", "Khác"),
+]
 
 
 class RegisterForm(FlaskForm):
@@ -66,16 +74,7 @@ class RegisterForm(FlaskForm):
             "placeholder": "Xác nhận mật khẩu",
         },
     )
-    major = SelectField(
-        "Ngành học",
-        choices=[
-            ("1", "Công nghệ thông tin"),
-            ("2", "Ngôn ngữ Anh"),
-            ("3", "Quản trị kinh doanh"),
-            ("4", "Sư phạm"),
-            ("5", "Khác"),
-        ],
-    )
+    major = SelectField("Ngành học", choices=MAJOR_CHOICES)
     about_user = TextAreaField(
         "Tóm tắt bản thân",
         render_kw={
@@ -83,4 +82,5 @@ class RegisterForm(FlaskForm):
             "placeholder": "Sinh viên năm mấy? Khoa, trường học?",
         },
     )
+    recaptcha = RecaptchaField()
     submit = SubmitField("Đăng ký")
