@@ -25,7 +25,7 @@ def create_app(config_name):
     # print(app.config["SQLALCHEMY_DATABASE_URI"])
 
     with app.app_context():
-        db.create_all()  # for create database and tables
+        db.create_all()  # for create all tables with database existed
         app.register_blueprint(admin, url_prefix="/admin")
         app.register_blueprint(lecturer, url_prefix="/lecturer")
         app.register_blueprint(studentPage, url_prefix="/student")

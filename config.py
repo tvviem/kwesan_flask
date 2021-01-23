@@ -33,7 +33,7 @@ class Config:
 class DevelopmentConfig(Config):
     ENV = "development"
     DEBUG = True
-    TESTING = False  # use for enable/disable google recaptcha, if TRUE, then ignore check captcha
+    TESTING = True  # use for enable/disable google recaptcha, if TRUE, then ignore check captcha
     # SQLALCHEMY_DATABASE_URI = os.environ.get(
     #     "DEV_DATABASE_URL"
     # )  or "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")

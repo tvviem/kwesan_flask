@@ -9,7 +9,6 @@ from app.models import User, RoleType
 
 migrate = Migrate(app, db)
 manager = Manager(app)
-bcrypt = Bcrypt()
 
 
 @manager.command
