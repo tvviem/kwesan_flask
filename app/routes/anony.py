@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from .forms.signup_form import RegisterForm, MAJOR_CHOICES
-from .models import User, RoleType
+from ..forms.signup_form import RegisterForm, MAJOR_CHOICES
+from ..models import User, RoleType
 from extensions import db
 
-# alias user use in template with href="{{ url_for('user.<method_name>') }}"
+# alias user use in template with href="{{ url_for('user.<method_name_for_route>') }}"
 userPage = Blueprint("user", __name__, template_folder="templates")
 indexPage = Blueprint("index", __name__, template_folder="templates")
 

@@ -1,5 +1,5 @@
-# from flask_bcrypt import Bcrypt
 from extensions import db, bcrypt
+from flask_login import UserMixin
 import enum, datetime
 
 
@@ -9,7 +9,7 @@ class RoleType(enum.Enum):
     LECT = "Lecturer"
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
     # if you want to identify a specific schema, you can use the below command
     # notice: before making newschema

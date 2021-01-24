@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template
 
-lecturer = Blueprint("lecturer", __name__, template_folder="../templates")
+lecturerRoutes = Blueprint("lecturer", __name__, template_folder="../templates")
 
 
-@lecturer.route("/")
+@lecturerRoutes.route("/")
 def lecturer_home():
     return render_template("lecturer/index.html", hasNavbar=True)
