@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, SelectField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired, Email, Length, EqualTo
+from wtforms.validators import DataRequired, Email, Length, EqualTo, InputRequired
 
 MAJOR_CHOICES = [
     ("1", "Công nghệ thông tin"),
@@ -14,7 +14,7 @@ MAJOR_CHOICES = [
 class RegisterForm(FlaskForm):
     last_name = StringField(
         "Họ và chữ đệm",
-        validators=[DataRequired(message="Họ và chữ đệm chưa nhập")],
+        validators=[InputRequired(message="Họ và chữ đệm chưa nhập")],
         render_kw={
             "autofocus": True,
             "autocomplete": True,
@@ -23,7 +23,7 @@ class RegisterForm(FlaskForm):
     )
     first_name = StringField(
         "Tên",
-        validators=[DataRequired(message="Chưa nhập tên")],
+        validators=[InputRequired(message="Chưa nhập tên")],
         render_kw={
             "autofocus": True,
             "autocomplete": True,
@@ -32,7 +32,10 @@ class RegisterForm(FlaskForm):
     )
     email = StringField(
         "Email",
-        validators=[Email(message="Email chưa hợp lệ")],
+        validators=[
+            InputRequired(message="Chưa nhập email"),
+            Email(message="Email chưa hợp lệ"),
+        ],
         render_kw={
             "autofocus": True,
             "autocomplete": True,
@@ -43,7 +46,7 @@ class RegisterForm(FlaskForm):
     user_name = StringField(
         "Định danh",
         validators=[
-            DataRequired("Thiếu định danh"),
+            InputRequired("Thiếu định danh"),
             Length(min=5, message="Định danh từ 5 ký tự"),
         ],
         render_kw={
@@ -56,7 +59,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField(
         "Mật khẩu",
         validators=[
-            DataRequired("Cần nhập mật khẩu"),
+            InputRequired("Cần nhập mật khẩu"),
             Length(min=8, message="Mật khẩu ít nhất 8 ký tự"),
             EqualTo("confirm_pass", message="Nhập lại mật khẩu chưa chính xác"),
         ],
@@ -82,5 +85,7 @@ class RegisterForm(FlaskForm):
             "placeholder": "Sinh viên năm mấy? Khoa, trường học?",
         },
     )
-    recaptcha = RecaptchaField()
+    recaptcha = RecaptchaField(
+        "", validators=[InputRequired("Hãy xác nhận không là người máy")]
+    )
     submit = SubmitField("Đăng ký")

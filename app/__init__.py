@@ -15,6 +15,7 @@ def create_app(config_name):
     # static_url_path set for showing client, static_folder for server directory
     app = Flask(__name__, static_url_path="/public", static_folder="static")
     app.config.from_object(config[config_name])
+    config[config_name].init_app(app)
     # assets = Environment(app)
     # assets.debug = True
     # assets.register(bundles)

@@ -55,6 +55,15 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return bcrypt.check_password_hash(self.password, password=password)
 
+    def is_admin(self):
+        return self.role == RoleType.ADMI
+
+    def is_lecturer(self):
+        return self.role == RoleType.LECT
+
+    def is_student(self):
+        return self.role == RoleType.STUD
+
     def __repr__(self):  # use for representing object when printed
         return "{} {}".format(self.lastname, self.firstname)
 

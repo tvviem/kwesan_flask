@@ -75,7 +75,10 @@
                 {{ form.about_user(class="textarea is-info") }}
               </div>
             </div>
-            {{ form.recaptcha }}
+            <div class="field">
+              {{ form.recaptcha }}
+              {{ render_error(form.recaptcha) }}
+            </div>
             <div class="field is-grouped is-grouped-centered">
               <p class="control">{{ form.submit(class="button is-link")}} </p>
               <p class="control"><a class="button is-link is-light" title="Về trang chủ">Trở về</a></p>
