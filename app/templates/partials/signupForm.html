@@ -81,7 +81,8 @@
             </div>
             <div class="field is-grouped is-grouped-centered">
               <p class="control">{{ form.submit(class="button is-link")}} </p>
-              <p class="control"><a class="button is-link is-light" title="Về trang chủ">Trở về</a></p>
+              <p class="control"><a class="button is-link is-light" href="{{ url_for('index.index') }}"
+                  title="Về trang chủ">Trở về</a></p>
             </div>
           </form>
         </div>

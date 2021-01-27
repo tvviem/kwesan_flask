@@ -13,17 +13,20 @@ class Config:
     SECRET_KEY = os.environ.get(
         "SECRET_KEY", "U can use os.urandom(32) to generate random key"
     )
-    MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.googlemail.com")
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = int(
         os.environ.get("MAIL_PORT", "587")
     )  # 587 for TLS=true, 465 for SSL=True
-    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "true").lower() in ["true", "on", "1"]
-    MAIL_USE_SSL = os.environ.get("MAIL_USE_SSL", "false")
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS").lower() in ["true", "1", "y"]
+    MAIL_USE_SSL = os.environ.get("MAIL_USE_SSL").lower() in ["true", "1", "y"]
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
-    FLASKY_MAIL_SUBJECT_PREFIX = "[admin_from_kwesan_sys]"
-    FLASKY_MAIL_SENDER = "Viem Trieu <bluitdev@gmail.com>"
-    FLASKY_ADMIN = os.environ.get("FLASKY_ADMIN", "trieu_vinh_viem")
+    SECURITY_PASSWORD_SALT = os.environ.get(
+        "SECURITY_PASSWORD_SALT", "salt_hard_guess_oke"
+    )
+    MAIL_SUBJECT_PREFIX = os.environ.get("MAIL_SUBJECT_PREFIX", "[admin_from_kwesan_sys]")
+    KWESAN_SYS_ADMIN = os.environ.get("KWESAN_SYS_ADMIN", "trieu_vinh_viem")
     RECAPTCHA_PUBLIC_KEY = os.environ.get("RECAPTCHA_PUBLIC_KEY")
     RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
 
@@ -35,7 +38,7 @@ class Config:
 class DevelopmentConfig(Config):
     ENV = os.environ.get("ENV", "development")
     DEBUG = True
-    TESTING = True  # use for on/off recaptcha
+    TESTING = False  # use for on/off recaptcha, flask-mail
     # use for enable/disable google recaptcha, if TRUE, then ignore check captcha
     SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get(
         "SQLALCHEMY_TRACK_MODIFICATIONS", True

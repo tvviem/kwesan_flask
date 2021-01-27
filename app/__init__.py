@@ -6,7 +6,7 @@ from .routes.student import studentRoutes
 from .api.routes import api
 from config import config
 from .routes.anony import userPage, indexPage
-from extensions import db, bcrypt, login_manager
+from extensions import db, bcrypt, login_manager, mail
 from .models import User
 
 
@@ -24,6 +24,7 @@ def create_app(config_name):
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    mail.init_app(app)
     # print(app.config["SQLALCHEMY_DATABASE_URI"])
 
     with app.app_context():

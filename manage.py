@@ -23,12 +23,26 @@ def create_admin():
             major="it-admin",
             aboutuser="Ham muốn làm ra ứng dụng",
             role=RoleType.ADMI,
+            confirmed=True,
+            confirmed_on=datetime.datetime.now(),
         )
     )
     db.session.commit()
 
 
 manager.add_command("db", MigrateCommand)
+
+
+@manager.command
+def create_db():
+    """Creates the db tables."""
+    db.create_all()
+
+
+@manager.command
+def drop_db():
+    """Drops the db tables."""
+    db.drop_all()
 
 
 if __name__ == "__main__":

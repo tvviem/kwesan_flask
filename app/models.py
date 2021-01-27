@@ -40,7 +40,17 @@ class User(UserMixin, db.Model):
     questionsets = db.relationship("UserParticipate", back_populates="user")
 
     def __init__(
-        self, firstname, lastname, username, email, password, major, aboutuser, role
+        self,
+        firstname,
+        lastname,
+        username,
+        email,
+        password,
+        major,
+        aboutuser,
+        role,
+        confirmed=False,
+        confirmed_on=None,
     ):
         self.firstname = firstname
         self.lastname = lastname
@@ -51,6 +61,8 @@ class User(UserMixin, db.Model):
         self.major = major
         self.aboutuser = aboutuser
         self.role = role
+        self.confirmed = confirmed
+        self.confirmed_on = confirmed_on
 
     def verify_password(self, password):
         return bcrypt.check_password_hash(self.password, password=password)

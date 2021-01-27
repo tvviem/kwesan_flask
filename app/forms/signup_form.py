@@ -1,4 +1,4 @@
-from flask_wtf import FlaskForm, RecaptchaField
+from flask_wtf import FlaskForm, RecaptchaField, Recaptcha
 from wtforms import StringField, PasswordField, SelectField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, InputRequired
 
@@ -86,6 +86,6 @@ class RegisterForm(FlaskForm):
         },
     )
     recaptcha = RecaptchaField(
-        "", validators=[InputRequired("Hãy xác nhận không là người máy")]
+        validators=[Recaptcha(message="Hãy xác nhận bạn ko là robot")]
     )
     submit = SubmitField("Đăng ký")

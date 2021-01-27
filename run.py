@@ -1,8 +1,8 @@
 from app import create_app
 
-from flask import request, render_template, make_response, url_for, redirect
-from datetime import datetime as dt
-from app.models import User
+# from flask import request, render_template, make_response, url_for, redirect
+# from datetime import datetime as dt
+# from app.models import User
 
 # from flask import current_app as app
 app = create_app("development")
@@ -34,5 +34,4 @@ def user_records():
  """
 
 if __name__ == "__main__":
-    # print(app.config.get("SECRET_KEY"))
     app.run(debug=True)
