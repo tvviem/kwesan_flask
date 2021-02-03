@@ -1,11 +1,25 @@
 from app import create_app
-
-# from flask import request, render_template, make_response, url_for, redirect
-# from datetime import datetime as dt
-# from app.models import User
-
+from flask import render_template
 # from flask import current_app as app
+
 app = create_app("development")
+@app.errorhandler(403)
+def forbidden_page(error):
+    return render_template("errors/403.html", title="Unauthorized_403"), 403
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("errors/404.html", title="Not_found_404"), 404
+
+@app.errorhandler(500)
+def server_error_page(error):
+    return render_template("errors/500.html", title="Internal_server_error"), 500
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
 
 """
 @app.route("/user", methods=["GET"])
@@ -33,5 +47,4 @@ def user_records():
     return render_template("user.login", users=User.query.all(), title="Show Users")
  """
 
-if __name__ == "__main__":
-    app.run(debug=True)
+

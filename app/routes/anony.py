@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from ..forms.signup_form import RegisterForm, MAJOR_CHOICES
+from ..forms.login_form import LoginForm
 from ..models import User, RoleType
 from extensions import db
 from flask_login import login_required, login_user
@@ -19,20 +20,19 @@ def index():
 
 @userPage.route("/login", methods=["GET", "POST"])
 def login():
-    # form = LoginForm(request.form)
-    # if form.validate_on_submit():
-    #     user = User.query.filter_by(email=form.email.data).first()
-    #     if user and bcrypt.check_password_hash(
-    #             user.password, request.form['password']):
-    #         login_user(user)
-    #         flash('Welcome.', 'success')
-    #         return redirect(url_for('main.home'))
-    #     else:
-    #         flash('Invalid email and/or password.', 'danger')
-    #         return render_template('user/login.html', form=form)
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(
+                user.password, request.form['password']):
+            login_user(user)
+            flash('Welcome.', 'success')
+            return redirect(url_for('admin.home'))
+        else:
+            flash('Invalid email and/or password.', 'danger')
+            return render_template('user/login.html', form=form)
 
-    # return render_template('user/login.html', form=form)
-    return render_template("login.html", hasNavbar=False)
+    return render_template("login.html", hasNavbar=False, form=form)
 
 
 @userPage.route("/register", methods=["GET", "POST"])
