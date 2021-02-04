@@ -66,12 +66,14 @@ def register():
         )
         db.session.add(newUser)
         db.session.commit()
+
+        # Send email to user
         token = generate_confirmation_token(newUser.email)
         confirm_url = url_for("user.confirm_email", token=token, _external=True)
         html = render_template("activate.html", confirm_url=confirm_url)
-
         subject = "Please confirm email with Kwesan-Sys!"
         send_email(subject, newUser.email, html)
+
         # mark user with signed in status
         # login_user(newUser)
 
@@ -85,12 +87,8 @@ def register():
 @userPage.route("/confirm/<token>")
 # @login_required
 def confirm_email(token):
-    try:
-        email = confirm_token(token)
-    except:
-        flash("The confirmation link is invalid or has expired.", "danger")
-        return redirect(url_for("index.index"))
-
+    email = confirm_token(token)
+    # if type(email) != bool:  # case token valid and email valid
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
         flash("Account already confirmed. Please login.", "success")
@@ -101,3 +99,22 @@ def confirm_email(token):
         db.session.commit()
         flash("You have confirmed your account. Thanks!", "success")
     return redirect(url_for("user.login"))
+
+
+@userPage.route("/resend", methods=["GET", "POST"])
+def resend_email_confirm():
+    if request.method == "POST":
+        user = User.query.filter_by(email=email).first_or_404()
+        if isinstance(user, User):
+            token = generate_confirmation_token(newUser.email)
+            confirm_url = url_for("user.confirm_email", token=token, _external=True)
+            html = render_template("activate.html", confirm_url=confirm_url)
+            subject = "Please confirm email with Kwesan-Sys!"
+            send_email(subject, newUser.email, html)
+            flash("Đã gửi lại email kích hoạt!", "success")
+            return redirect(url_for("index.index"))
+        else:
+            flash("Email chưa được sử dụng. Hãy đăng ký với mẫu sau!", "info")
+            return redirect(url_for("user.register"))
+    else:
+        return render_template("reactivate.html")
