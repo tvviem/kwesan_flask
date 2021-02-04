@@ -1,6 +1,14 @@
 from flask_wtf import FlaskForm, RecaptchaField, Recaptcha
 from wtforms import StringField, PasswordField, SelectField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired, Email, Length, EqualTo, InputRequired, ValidationError
+from wtforms.validators import (
+    DataRequired,
+    Email,
+    Length,
+    EqualTo,
+    InputRequired,
+    ValidationError,
+    Regexp,
+)
 
 MAJOR_CHOICES = [
     ("1", "Công nghệ thông tin"),
@@ -48,6 +56,7 @@ class RegisterForm(FlaskForm):
         validators=[
             InputRequired("Thiếu định danh"),
             Length(min=5, max=25, message="Định danh từ 5 ký tự"),
+            Regexp("^[a-zA-Z]\w+$", message="Định danh bắt đầu từ ký tự chữ"),
         ],
         render_kw={
             "autofocus": True,
@@ -89,9 +98,3 @@ class RegisterForm(FlaskForm):
         validators=[Recaptcha(message="Hãy xác nhận bạn ko là robot")]
     )
     submit = SubmitField("Đăng ký")
-    def validate_username(self, user_name):
-        excluded_chars = " *?!'^+%&/()=}][{$#"
-        for char in self.user_name.data:
-            if char in excluded_chars:
-                raise ValidationError(
-                    f"Ký tự {char} thì không được phép dùng cho định danh")

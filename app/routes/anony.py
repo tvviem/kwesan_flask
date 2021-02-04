@@ -23,14 +23,13 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(
-                user.password, request.form['password']):
+        if user and bcrypt.check_password_hash(user.password, request.form["password"]):
             login_user(user)
-            flash('Welcome.', 'success')
-            return redirect(url_for('admin.home'))
+            flash("Welcome.", "success")
+            return redirect(url_for("admin.home"))
         else:
-            flash('Invalid email and/or password.', 'danger')
-            return render_template('user/login.html', form=form)
+            flash("Invalid email and/or password.", "danger")
+            return render_template("user/login.html", form=form)
 
     return render_template("login.html", hasNavbar=False, form=form)
 
@@ -40,10 +39,6 @@ def register():
     register_form = RegisterForm()
     session.pop("_flashes", None)  # Clear flash message when GET signup form
     if register_form.validate_on_submit() and request.method == "POST":
-        # foundUser = User.query.filter_by(or_(email=register_form.email.data, username=register_form.user_name.data)).first()
-        # if UserQuery.get_user_id_by_email_or_username(register_form.email.data, register_form.user_name.data) is not None:
-        #     flash("Email và username đã đăng ký, hãy chọn email/username khác!", "danger")
-        #     return render_template("signup.html", hasNavbar=False, form=register_form)
 
         if UserQuery.is_existing_email(register_form.email.data):
             flash("Email đã đăng ký, hãy chọn email khác!", "danger")

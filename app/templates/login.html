@@ -3,12 +3,12 @@
 {% block title %} USER LOGIN {% endblock %}
 {% block content %}
 <section class="hero is-fullheight is-light">
-  <div class="hero-body has-text-centered">
+  <div class="hero-body">
     <div class="container">
       {% include 'partials/messages.html' ignore missing with context %}
       <div class="columns is-centered is-mobile">
-        <div class="column is-5-tablet is-4-desktop is-3-widescreen is-two-thirds-mobile box">
-          <h4 class="title has-text-grey is-4">ĐĂNG NHẬP</h4>
+        <div class="column is-6-tablet is-5-desktop is-4-widescreen is-two-thirds-mobile box">
+          <h4 class="title is-4 has-text-centered">ĐĂNG NHẬP</h4>
           <form action="/user/login" method="POST">
             {{ form.csrf_token }}
             <div class="field">
@@ -26,17 +26,20 @@
               {{ render_error(form.password) }}
             </div>
             <div class="field">
-              {{ form.recaptcha }}
+              <div class="control ">
+                {{ form.recaptcha }}
+              </div>
               {{ render_error(form.recaptcha) }}
             </div>
-            <div class="field">
-              <label class="checkbox is-vcentered">
+            <div class="field"><button class="button is-primary is-fullwidth">Đăng nhập</button></div>
+            <div class="field is-left">
+              <label class="checkbox">
                 <input type="checkbox">
                 <span> Nhớ phiên đăng nhập </span>
               </label>
             </div>
-            <div class="field"><button class="button is-primary is-fullwidth">Đăng nhập</button></div>
-            <div class="field"><a class="button is-link is-light is-fullwidth" href="{{ url_for('index.index') }}">Trang
+            <div class="field" title="Về trang chủ"><a class="button is-link is-light is-fullwidth"
+                href="{{ url_for('index.index') }}">Trang
                 chủ</a>
             </div>
           </form>
