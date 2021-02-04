@@ -9,7 +9,6 @@
       <div class="columns is-centered is-mobile">
         <div class="column is-5-tablet is-4-desktop is-3-widescreen is-two-thirds-mobile box">
           <h4 class="title has-text-grey is-4">ĐĂNG NHẬP</h4>
-          {% include 'partials/messages.html' ignore missing with context %}
           <form action="/user/login" method="POST">
             {{ form.csrf_token }}
             <div class="field">
