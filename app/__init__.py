@@ -11,7 +11,6 @@ from .models import User
 
 
 def create_app(config_name):
-    # app = Flask(__name__)
     # static_url_path set for showing client, static_folder for server directory
     app = Flask(__name__, static_url_path="/public", static_folder="static")
     app.config.from_object(config[config_name])
@@ -29,11 +28,11 @@ def create_app(config_name):
 
     with app.app_context():
         db.create_all()  # for create all tables with database existed
+        app.register_blueprint(indexPage)
+        app.register_blueprint(userPage, url_prefix="/user/")
         app.register_blueprint(adminRoutes, url_prefix="/admin/")
         app.register_blueprint(lecturerRoutes, url_prefix="/lecturer/")
         app.register_blueprint(studentRoutes, url_prefix="/student/")
-        app.register_blueprint(userPage, url_prefix="/user/")
-        app.register_blueprint(indexPage)
         app.register_blueprint(api, url_prefix="/api/")
 
     return app

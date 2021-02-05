@@ -1,7 +1,24 @@
 {% extends "base.html" %}
-{% block title %} USER LOGIN {% endblock %}
+{% block title %} Re-Activate the user via email {% endblock %}
 {% block content %}
-
-
-
+{% include 'partials/messages.html' ignore missing with context %}
+<section class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <form action="{{ url_for('user.resend_email_confirm')}}" method="POST">
+                <div class="field">
+                    <p class="control has-icons-left">
+                        <input class="input" type="email" placeholder="Email">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field">
+                    <button class="button is-primary is-light" type="submit">Xác nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 {% endblock %}

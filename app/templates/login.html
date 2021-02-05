@@ -25,23 +25,27 @@
               </div>
               {{ render_error(form.password) }}
             </div>
-            <div class="field">
+            <div class="field is-fullwidth">
               <div class="control ">
                 {{ form.recaptcha }}
               </div>
               {{ render_error(form.recaptcha) }}
             </div>
-            <div class="field"><button class="button is-primary is-fullwidth">Đăng nhập</button></div>
             <div class="field is-left">
               <label class="checkbox">
-                <input type="checkbox">
-                <span> Nhớ phiên đăng nhập </span>
+                {{ form.remember }}
+                <span> {{ form.remember.label }} </span>
               </label>
             </div>
-            <div class="field" title="Về trang chủ"><a class="button is-link is-light is-fullwidth"
-                href="{{ url_for('index.index') }}">Trang
+            <div class="field">
+              <button class="button is-primary is-fullwidth">Đăng nhập</button>
+            </div>
+
+            <div class="field is-left" title="Về trang chủ">
+              <a class="button is-link is-light is-fullwidth" href="{{ url_for('index.index') }}">Trang
                 chủ</a>
             </div>
+            <p class="has-text-grey"><a href="">Đăng ký</a> &nbsp;·&nbsp;  <a href="">Quên mật khẩu</a> &nbsp;·&nbsp;  <a href="">Help?</a></p>
           </form>
         </div>
       </div>

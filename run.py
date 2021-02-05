@@ -1,8 +1,13 @@
 from app import create_app
-from flask import render_template
-# from flask import current_app as app
+from flask import render_template, send_from_directory
+from os import path
 
 app = create_app("development")
+
+# @app.route('/favicon.ico')
+# def favicon():
+#     return send_from_directory(path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 @app.errorhandler(403)
 def forbidden_page(error):
     return render_template("errors/403.html", title="Unauthorized_403"), 403

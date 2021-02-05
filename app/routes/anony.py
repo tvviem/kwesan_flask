@@ -17,7 +17,6 @@ indexPage = Blueprint("index", __name__, template_folder="templates")
 def index():
     return render_template("index.html", hasNavbar=True)
 
-
 @userPage.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -59,6 +58,7 @@ def register():
             RoleType.STUD,
             confirmed=False,
         )
+        print("TEST:--------", register_form.user_name.data, "--", register_form.email.data)
         db.session.add(newUser)
         db.session.commit()
 
@@ -82,8 +82,8 @@ def register():
 @userPage.route("/confirm/<token>")
 # @login_required
 def confirm_email(token):
+    session.pop("_flashes", None)
     email = confirm_token(token)
-    # if type(email) != bool:  # case token valid and email valid
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
         flash("Account already confirmed. Please login.", "success")

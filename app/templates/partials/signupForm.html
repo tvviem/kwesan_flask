@@ -29,7 +29,7 @@
                 <div class="field">
                   {{ form.email.label(class="label") }}
                   <div class="control has-icons-left">
-                    {{ form.email(class="input") }}
+                    {{ form.email(class="input")|lower }}
                     <span class="icon is-small is-left"><i class="far fa-envelope"></i></span>
                   </div>
                   {{ render_error(form.email) }}
@@ -39,7 +39,7 @@
                 <div class="field">
                   {{ form.user_name.label(class="label") }}
                   <div class="control has-icons-left">
-                    {{ form.user_name(class="input") }}
+                    {{ form.user_name(class="input")|lower }}
                     <span class="icon is-small is-left"><i class="fas fa-user-tag"></i></span>
                   </div>
                   {{ render_error(form.user_name) }}
