@@ -17,6 +17,7 @@ indexPage = Blueprint("index", __name__, template_folder="templates")
 def index():
     return render_template("index.html", hasNavbar=True)
 
+
 @userPage.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -38,7 +39,6 @@ def register():
     register_form = RegisterForm()
     session.pop("_flashes", None)  # Clear flash message when GET signup form
     if register_form.validate_on_submit() and request.method == "POST":
-
         if UserQuery.is_existing_email(register_form.email.data):
             flash("Email đã đăng ký, hãy chọn email khác!", "danger")
             return render_template("signup.html", hasNavbar=False, form=register_form)
@@ -58,7 +58,6 @@ def register():
             RoleType.STUD,
             confirmed=False,
         )
-        print("TEST:--------", register_form.user_name.data, "--", register_form.email.data)
         db.session.add(newUser)
         db.session.commit()
 
@@ -83,33 +82,44 @@ def register():
 # @login_required
 def confirm_email(token):
     session.pop("_flashes", None)
+
     email = confirm_token(token)
+    if email == 0:
+        flash("Thẻ bài quá hạn, nhập email để nhận thư kích hoạt lại!", "warning")
+        return redirect(url_for("user.resend_email_confirm", hasNavbar=True))
+    if email == 1:
+        # flash("Thẻ kích hoạt không hợp lệ, hãy tạo tài khoản!", "danger")
+        return redirect(url_for("index.index"))
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
-        flash("Account already confirmed. Please login.", "success")
+        flash("Tài khoản đã kích hoạt trước đó, hãy đăng nhập!", "success")
     else:
         user.confirmed = True
         user.confirmed_on = datetime.now()
         db.session.add(user)
         db.session.commit()
-        flash("You have confirmed your account. Thanks!", "success")
+        flash("Kích hoạt tài khoản thành công, hãy đăng nhập!", "success")
     return redirect(url_for("user.login"))
 
 
 @userPage.route("/resend", methods=["GET", "POST"])
 def resend_email_confirm():
     if request.method == "POST":
-        user = User.query.filter_by(email=email).first_or_404()
-        if isinstance(user, User):
-            token = generate_confirmation_token(newUser.email)
-            confirm_url = url_for("user.confirm_email", token=token, _external=True)
-            html = render_template("activate.html", confirm_url=confirm_url)
-            subject = "Please confirm email with Kwesan-Sys!"
-            send_email(subject, newUser.email, html)
-            flash("Đã gửi lại email kích hoạt!", "success")
-            return redirect(url_for("index.index"))
+        user = User.query.filter_by(email=request.form.get("email")).first_or_404()
+        if not user.confirmed:
+            if isinstance(user, User):  # or use: user is not None
+                token = generate_confirmation_token(user.email)
+                confirm_url = url_for("user.confirm_email", token=token, _external=True)
+                html = render_template("activate.html", confirm_url=confirm_url)
+                subject = "Again! Please confirm email with Kwesan-Sys"
+                send_email(subject, user.email, html)
+                flash("Đã gửi lại email kích hoạt!", "success")
+                return redirect(url_for("index.index"))
+            else:
+                flash("Email chưa được sử dụng. Hãy đăng ký với mẫu sau!", "info")
+                return redirect(url_for("user.register"))
         else:
-            flash("Email chưa được sử dụng. Hãy đăng ký với mẫu sau!", "info")
-            return redirect(url_for("user.register"))
+            flash("Tài khoản đã kích hoạt trước đó, hãy đăng nhập!", "success")
+            return redirect(url_for("user.login"))
     else:
         return render_template("reactivate.html")

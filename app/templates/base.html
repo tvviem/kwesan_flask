@@ -22,7 +22,7 @@
   {% endblock %}
 </head>
 
-{%if hasNavbar %}
+{%if hasNavbar or request.args.get('hasNavbar') %}
 
 <body class='has-navbar-fixed-top'>
   {%else%}
