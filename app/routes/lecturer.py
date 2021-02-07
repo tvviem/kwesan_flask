@@ -4,5 +4,5 @@ lecturerRoutes = Blueprint("lecturer", __name__, template_folder="../templates")
 
 
 @lecturerRoutes.route("/")
-def lecturer_home():
+def home():
     return render_template("lecturer/index.html", hasNavbar=True)

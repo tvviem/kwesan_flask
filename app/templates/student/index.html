@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% block title %} Student role {% endblock %}
 {% block content %}
+{% include 'partials/navbar.html' ignore missing with context %}
 <h1>
   GIAO DIEN TUONG TAC CAC CHUC NANG CUA SINH VIEN
 </h1>
+{% if current_user.is_authenticated %}
+<h1 class="title">Hi Student {{ current_user }}!</h1>
+{% else %}
+<h1 class="title">ANONYMOUS USER</h1>
+{% endif %}
 {% endblock %}

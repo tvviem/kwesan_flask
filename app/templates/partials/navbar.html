@@ -10,10 +10,15 @@
     <div class="navbar-start"><a class="navbar-item" href="/guides"><span class="icon"><i
             class="fab fa-glide-g"></i></span>&nbsp;&nbsp;Hướng dẫn</a></div>
     <div class="navbar-end">
+      {% if not current_user.is_authenticated %}
       <a class="navbar-item" href="{{ url_for('user.register') }}"> <span class="icon"><i
             class="fas fa-user-plus"></i></span>&nbsp;&nbsp;Đăng ký</a>
       <a class="navbar-item" href="{{ url_for('user.login') }}"> <span class="icon"><i
             class="fas fa-sign-in-alt"></i></span>&nbsp;&nbsp;Đăng nhập</a>
+      {% else %}
+      <a class="navbar-item" href="{{ url_for('user.logout') }}"> <span class="icon"><i
+            class="fas fa-sign-out-alt"></i></span>&nbsp;&nbsp;Đăng xuất</a>
+      {% endif %}
     </div>
   </div>
 </nav>

@@ -25,6 +25,11 @@
     </div>
     <div class="column is-10-desktop is-9-tablet">
       Second column
+      {% if current_user.is_authenticated %}
+      <h1 class="title">Hi ADMIN {{ current_user.name }}!</h1>
+      {% else %}
+      <h1 class="title">ANONYMOUS USER</h1>
+      {% endif %}
     </div>
   </div>
 </section>

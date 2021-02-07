@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from ..forms.signup_form import RegisterForm, MAJOR_CHOICES
 from ..forms.login_form import LoginForm
 from ..models import User, RoleType
-from extensions import db
-from flask_login import login_required, login_user
+from extensions import db, bcrypt
+from flask_login import login_required, login_user, logout_user, current_user
 from ..util.mail import generate_confirmation_token, confirm_token, send_email
 from ..util.query import UserQuery
 from datetime import datetime
@@ -15,21 +15,33 @@ indexPage = Blueprint("index", __name__, template_folder="templates")
 
 @indexPage.route("/")
 def index():
+    # user = current_user
+    # if user: # neu nguoi dung da dang nhap chuyen den trang home tuong ung quyen
+    #     print("User is_authenticated()")
+    # else:
+    #     print("User NOT is_authenticated()")
     return render_template("index.html", hasNavbar=True)
 
 
 @userPage.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, request.form["password"]):
-            login_user(user)
-            flash("Welcome.", "success")
-            return redirect(url_for("admin.home"))
+    if request.method == "POST" and form.validate_on_submit():
+        user = User.query.filter_by(username=form.user_name.data).first()
+        if isinstance(user, User) and bcrypt.check_password_hash(
+            user.password, form.password.data
+        ):
+            login_user(user, remember=form.remember.data)
+            # flash("Welcome.", "success")
+            if user.role == RoleType.ADMI:
+                return redirect(url_for("admin.home"))
+            elif user.role == RoleType.LECT:
+                return redirect(url_for("lecturer.home"))
+            else:
+                return redirect(url_for("student.home"))
         else:
-            flash("Invalid email and/or password.", "danger")
-            return render_template("user/login.html", form=form)
+            flash("Thông tin tài khoản chưa đúng", "warning")
+            return render_template("login.html", form=form)
 
     return render_template("login.html", hasNavbar=False, form=form)
 
@@ -123,3 +135,10 @@ def resend_email_confirm():
             return redirect(url_for("user.login"))
     else:
         return render_template("reactivate.html")
+
+
+@userPage.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("index.index"))

@@ -8,13 +8,16 @@ app = create_app("development")
 # def favicon():
 #     return send_from_directory(path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
+
 @app.errorhandler(403)
 def forbidden_page(error):
     return render_template("errors/403.html", title="Unauthorized_403"), 403
 
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("errors/404.html", title="Not_found_404"), 404
+
 
 @app.errorhandler(500)
 def server_error_page(error):
@@ -23,7 +26,6 @@ def server_error_page(error):
 
 if __name__ == "__main__":
     app.run(debug=True)
-
 
 
 """
@@ -51,5 +53,3 @@ def user_records():
         redirect(url_for("login"))
     return render_template("user.login", users=User.query.all(), title="Show Users")
  """
-
-

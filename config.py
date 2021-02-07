@@ -10,6 +10,7 @@ load_dotenv(dotenv_path)
 
 
 class Config:
+    SERVER_NAME = os.environ.get("SERVER_NAME", "localhost")
     SECRET_KEY = os.environ.get(
         "SECRET_KEY", "U can use os.urandom(32) to generate random key"
     )

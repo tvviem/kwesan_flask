@@ -34,10 +34,11 @@ def create_app(config_name):
         app.register_blueprint(lecturerRoutes, url_prefix="/lecturer/")
         app.register_blueprint(studentRoutes, url_prefix="/student/")
         app.register_blueprint(api, url_prefix="/api/")
+        login_manager.login_view = url_for("user.login") # have to set SERVER_NAME in .env
 
     return app
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return User.query.get(int(user_id))

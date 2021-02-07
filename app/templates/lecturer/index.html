@@ -4,4 +4,9 @@
 <h1>
   GIAO DIEN TUONG TAC CAC CHUC NANG CUA GIANG VIEN
 </h1>
+{% if current_user.is_authenticated %}
+<h1 class="title">Hi lecturer: {{ current_user.name }}!</h1>
+{% else %}
+<h1 class="title">ANONYMOUS USER</h1>
+{% endif %}
 {% endblock %}

@@ -7,7 +7,7 @@ class LoginForm(FlaskForm):
         "Định danh",
         validators=[
             InputRequired("Thiếu định danh"),
-            Length(min=5, message="Định danh từ 5 ký tự"),
+            Length(min=5, max=25, message="Định danh từ 5 ký tự"),
         ],
         render_kw={
             "autofocus": True,
