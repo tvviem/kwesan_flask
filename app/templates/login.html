@@ -45,8 +45,9 @@
               <a class="button is-link is-light is-fullwidth" href="{{ url_for('index.index') }}">Trang
                 chủ</a>
             </div>
-            <p class="has-text-grey"><a href="">Đăng ký</a> &nbsp;·&nbsp; <a href="">Quên mật khẩu</a> &nbsp;·&nbsp; <a
-                href="">Help?</a></p>
+            <p class="has-text-grey"><a href="{{ url_for('user.register') }}">Đăng ký</a> &nbsp;·&nbsp;<a
+                href="{{ url_for('user.forget_password') }}">Quên
+                mật khẩu</a></p>
           </form>
         </div>
       </div>

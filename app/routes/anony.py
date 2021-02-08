@@ -1,4 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+    abort,
+)
 from ..forms.signup_form import RegisterForm, MAJOR_CHOICES
 from ..forms.login_form import LoginForm
 from ..models import User, RoleType
@@ -28,28 +37,30 @@ def login():
     form = LoginForm()
     if request.method == "POST" and form.validate_on_submit():
         user = User.query.filter_by(username=form.user_name.data).first()
-        if isinstance(user, User) and bcrypt.check_password_hash(
-            user.password, form.password.data
-        ):
-            login_user(user, remember=form.remember.data)
-            # flash("Welcome.", "success")
-            if user.role == RoleType.ADMI:
-                return redirect(url_for("admin.home"))
-            elif user.role == RoleType.LECT:
-                return redirect(url_for("lecturer.home"))
+        if isinstance(user, User) and user.verify_password(form.password.data):
+            if user.confirmed:
+                login_user(user, remember=form.remember.data)
+                if user.role == RoleType.ADMI:
+                    return redirect(url_for("admin.home"))
+                elif user.role == RoleType.LECT:
+                    return redirect(url_for("lecturer.home"))
+                elif user.role == RoleType.STUD:
+                    return redirect(url_for("student.home"))
+                else:
+                    return abort(403)
             else:
-                return redirect(url_for("student.home"))
+                flash("Tài khoản chưa xác nhận qua email", "warning")
+                return render_template("login.html", form=form)
         else:
             flash("Thông tin tài khoản chưa đúng", "warning")
             return render_template("login.html", form=form)
-
     return render_template("login.html", hasNavbar=False, form=form)
 
 
 @userPage.route("/register", methods=["GET", "POST"])
 def register():
     register_form = RegisterForm()
-    session.pop("_flashes", None)  # Clear flash message when GET signup form
+    # session.pop("_flashes", None)  # Clear flash message when GET signup form
     if register_form.validate_on_submit() and request.method == "POST":
         if UserQuery.is_existing_email(register_form.email.data):
             flash("Email đã đăng ký, hãy chọn email khác!", "danger")
@@ -85,22 +96,20 @@ def register():
 
         flash("Người dùng đã được tạo, bạn hãy xác nhận qua email", "info")
         return redirect(url_for("index.index"))
-    # else:
-    #     flash("Chưa tạo được người dùng", "danger")
     return render_template("signup.html", hasNavbar=False, form=register_form)
 
 
 @userPage.route("/confirm/<token>")
 # @login_required
 def confirm_email(token):
-    session.pop("_flashes", None)
+    # session.pop("_flashes", None)
 
     email = confirm_token(token)
     if email == 0:
         flash("Thẻ bài quá hạn, nhập email để nhận thư kích hoạt lại!", "warning")
         return redirect(url_for("user.resend_email_confirm", hasNavbar=True))
     if email == 1:
-        # flash("Thẻ kích hoạt không hợp lệ, hãy tạo tài khoản!", "danger")
+        flash("Thẻ kích hoạt không hợp lệ, hãy đăng ký tài khoản!", "danger")
         return redirect(url_for("index.index"))
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
@@ -117,9 +126,12 @@ def confirm_email(token):
 @userPage.route("/resend", methods=["GET", "POST"])
 def resend_email_confirm():
     if request.method == "POST":
-        user = User.query.filter_by(email=request.form.get("email")).first_or_404()
-        if not user.confirmed:
-            if isinstance(user, User):  # or use: user is not None
+        user = User.query.filter_by(email=request.form.get("email")).first()
+        if user is None:
+            flash("Email chưa được sử dụng!", "info")
+            return render_template("reactivate.html")
+        else:
+            if not user.confirmed:
                 token = generate_confirmation_token(user.email)
                 confirm_url = url_for("user.confirm_email", token=token, _external=True)
                 html = render_template("activate.html", confirm_url=confirm_url)
@@ -128,13 +140,37 @@ def resend_email_confirm():
                 flash("Đã gửi lại email kích hoạt!", "success")
                 return redirect(url_for("index.index"))
             else:
-                flash("Email chưa được sử dụng. Hãy đăng ký với mẫu sau!", "info")
-                return redirect(url_for("user.register"))
-        else:
-            flash("Tài khoản đã kích hoạt trước đó, hãy đăng nhập!", "success")
-            return redirect(url_for("user.login"))
+                flash("Tài khoản đã kích hoạt trước đó, hãy đăng nhập!", "success")
+                return redirect(url_for("user.login"))
     else:
         return render_template("reactivate.html")
+
+
+@userPage.route("/forget-password", methods=["GET", "POST"])
+def forget_password():
+    if request.method == "POST":
+        user = User.query.filter_by(email=request.form.get("email")).first()
+        if user is None:
+            flash("Email chưa được sử dụng!", "info")
+        else:
+            flash("Đã gửi email reset tài khoản!", "info")
+        return render_template("reset_password.html", hasNavbar=True)
+
+    return render_template("reset_password.html", hasNavbar=True)
+
+
+@userPage.route("/home")
+@login_required
+def home():
+    user = current_user
+    if user.role == RoleType.ADMI:
+        return redirect(url_for("admin.home"))
+    elif user.role == RoleType.LECT:
+        return redirect(url_for("lecturer.home"))
+    elif user.role == RoleType.STUD:
+        return redirect(url_for("student.home"))
+    else:
+        return abort(403)
 
 
 @userPage.route("/logout")

@@ -16,6 +16,8 @@
       <a class="navbar-item" href="{{ url_for('user.login') }}"> <span class="icon"><i
             class="fas fa-sign-in-alt"></i></span>&nbsp;&nbsp;Đăng nhập</a>
       {% else %}
+      <a class="navbar-item" href="{{ url_for('user.home') }}"> <span class="icon"><i
+            class="far fa-edit"></i></span>&nbsp;&nbsp;Vào sử dụng</a>
       <a class="navbar-item" href="{{ url_for('user.logout') }}"> <span class="icon"><i
             class="fas fa-sign-out-alt"></i></span>&nbsp;&nbsp;Đăng xuất</a>
       {% endif %}
