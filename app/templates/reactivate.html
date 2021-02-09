@@ -10,10 +10,11 @@
                     <h1 class="title is-4">THÔNG TIN YÊU CẦU KÍCH HOẠT</h1>
                     {% include 'partials/messages.html' ignore missing with context %}
                     <form action="{{ url_for('user.resend_email_confirm')}}" method="POST">
+                        {{ form.csrf_token }}
                         <div class="field">
                             <label class="label" for="email">Nhập địa chỉ email</label>
                             <p class="control has-icons-left">
-                                <input class="input" type="email" placeholder="Email address" name="email">
+                                <input class="input" type="email" placeholder="Email address" name="email" required>
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-envelope"></i>
                                 </span>

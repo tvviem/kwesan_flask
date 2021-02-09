@@ -64,6 +64,9 @@ class User(UserMixin, db.Model):
         self.confirmed = confirmed
         self.confirmed_on = confirmed_on
 
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password).decode("UTF-8")
+
     def verify_password(self, password):
         return bcrypt.check_password_hash(self.password, password=password)
 
