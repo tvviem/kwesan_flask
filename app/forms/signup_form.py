@@ -6,7 +6,6 @@ from wtforms.validators import (
     Length,
     EqualTo,
     InputRequired,
-    ValidationError,
     Regexp,
 )
 
@@ -84,6 +83,7 @@ class RegisterForm(FlaskForm):
             "autofocus": True,
             "autocomplete": True,
             "placeholder": "Xác nhận mật khẩu",
+            "required": True
         },
     )
     major = SelectField("Ngành học", choices=MAJOR_CHOICES)

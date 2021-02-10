@@ -50,9 +50,14 @@ def page_not_found(error):
     return render_template("errors/404.html", title="Not_found_404"), 404
 
 
+@app.errorhandler(405)
+def page_not_found(error):
+    return render_template("errors/405.html", title="Method_not_allowed_405"), 404
+
+
 @app.errorhandler(500)
 def server_error_page(error):
-    return render_template("errors/500.html", title="Internal_server_error"), 500
+    return render_template("errors/500.html", title="Internal_server_error_500"), 500
 
 
 if __name__ == "__main__":

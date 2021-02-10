@@ -10,6 +10,8 @@ from flask import (
 )
 from ..forms.signup_form import RegisterForm, MAJOR_CHOICES
 from ..forms.login_form import LoginForm
+from ..forms.reset_pwd_form import ResetPwdForm, ProvidingEmailForm
+
 from ..models import User, RoleType
 from extensions import db, bcrypt
 from flask_login import login_required, login_user, logout_user, current_user
@@ -155,12 +157,12 @@ def resend_email_confirm():
 
 @userPage.route("/resetpwd/<token>")
 def reset_pwd_via_email(token):
-    email = confirm_token(token)
+    email = confirm_token(token, expiration=900)  # trong 15 phút
     if email == 0:
-        flash("Thẻ bài quá hạn, nhập email để nhận thiệt lập mật khẩu!", "warning")
+        flash("Thẻ bài quá hạn, nhập email để nhận lại thiết lập mật khẩu!", "warning")
         return redirect(url_for("user.forget_password", hasNavbar=True))
     if email == 1:
-        flash("Thẻ kích hoạt không hợp lệ, hãy đăng ký tài khoản!", "danger")
+        flash("Thẻ truy cập thay đổi mật khẩu không hợp lệ!", "danger")
         return redirect(url_for("index.index"))
     user = User.query.filter_by(email=email).first_or_404()
     if not user.confirmed:
@@ -169,18 +171,21 @@ def reset_pwd_via_email(token):
         user.confirmed_on = datetime.now()
         db.session.add(user)
         db.session.commit()
-    return render_template("reset_password_fields.html", hasNavbar=True, email=email)
+    # Get valid email and username
+    session["username"] = user.username
+    session["email"] = email
+    form = ResetPwdForm()
+    form.user_name.data = user.username
+    form.email.data = user.email
+
+    return render_template("reset_password_fields.html", hasNavbar=True, form=form)
 
 
 @userPage.route("/forget-password", methods=["GET", "POST"])
 def forget_password():
-    if request.method == "POST":
-        # replace {2,3} by + for custom email
-        regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
-        if not re.search(regex, request.form.get("email")):
-            flash("Email không hợp lệ!", "warning")
-            return render_template("reset_password.html", hasNavbar=True)
-        user = User.query.filter_by(email=request.form.get("email")).first()
+    form = ProvidingEmailForm()
+    if request.method == "POST" and form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
         if user is None:
             flash("Email chưa được sử dụng!", "info")
         else:
@@ -196,41 +201,33 @@ def forget_password():
             flash("Đã gửi email reset tài khoản!", "info")
             return redirect(url_for("index.index"))
 
-    return render_template("reset_password.html", hasNavbar=True)
+    return render_template("email_to_reset_pwd.html", hasNavbar=True, form=form)
 
 
-@userPage.route("/reset-password", methods=["GET", "POST"])
+@userPage.route("/reset-password", methods=["POST"])
 def reset_pwd_with_form():
+    form = ResetPwdForm()
+    form.email.data = session["email"]
+    form.user_name.data = session["username"]
     if request.method == "POST":
-        regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
-        email = request.form.get("email")
-        if not re.search(regex, email):
-            flash("Email không hợp lệ!", "warning")
+        if not form.validate_on_submit():
             return render_template(
-                "reset_password_fields.html", hasNavbar=True, email=email
+                "reset_password_fields.html", hasNavbar=True, form=form
             )
 
-        user = User.query.filter_by(email=email).first()
-        password1 = request.form.get("password1").strip()
-        password2 = request.form.get("password2").strip()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is None:
             flash("Email chưa đăng ký người dùng")
-            return render_template(
-                "reset_password_fields.html", hasNavbar=True, email=email
-            )
-        if password1 == password2:
-            user.set_password(password1)
-        else:
-            flash("Nhập mật khẩu 2 lần phải giống nhau")
-            return render_template(
-                "reset_password_fields.html", hasNavbar=True, email=email
-            )
+            return redirect(url_for("index.index"), hasNavbar=True)
+
+        user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
+        session.pop("username", None)
+        session.pop("email", None)
         flash("Thay đổi mật khẩu thành công")
         return redirect(url_for("user.login"))
-
-    abort(403)
+    abort(405)
 
 
 @userPage.route("/home")

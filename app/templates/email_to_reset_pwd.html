@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/_formhelpers.html" import render_error %}
 {% block content %}
 {% include 'partials/navbar.html' ignore missing with context %}
 <section class="hero">
@@ -11,17 +12,19 @@
           <form action="{{ url_for('user.forget_password')}}" method="POST">
             {{ form.csrf_token }}
             <div class="field">
-              <label class="label" for="email">Email</label>
-              <p class="control has-icons-left">
-                <input class="input" type="email" placeholder="Nhập địa chỉ email" name="email" required>
-                <span class="icon is-small is-left">
-                  <i class="fas fa-envelope"></i>
-                </span>
-              </p>
+              {{ form.email.label(class="label") }}
+              <div class="control has-icons-left">
+                {{ form.email(class="input")|lower }}
+                <span class="icon is-small is-left"><i class="far fa-envelope"></i></span>
+              </div>
+              {{ render_error(form.email) }}
             </div>
             <div class="field">
-              <button class="button is-primary" type="submit" title="Chọn để có email thiết lập lại mật khẩu">Xác
-                nhận</button>
+              {{ form.recaptcha }}
+              {{ render_error(form.recaptcha) }}
+            </div>
+            <div class="field">
+              {{ form.submit(class="button is-link", title="Chọn để nhận link kích hoạt")}}
             </div>
           </form>
         </div>
