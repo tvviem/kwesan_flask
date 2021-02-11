@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>500</h1>
-<p>Something's wrong! We are on the job.</p>
-<p><em>Return <a href="{{url_for('index.index')}}">Home</a>?</em></p>
+<section class="section is-medium">
+  <div class="container">
+    <h1 class="title">Internal Server Error - 500</h1>
+    <h2 class="subtitle">
+      Lỗi phía máy chủ. Mong người dùng quay lại sau!
+    </h2>
+    <p><strong>Liên hệ quản trị: </strong><a href="mailto:tvviem@blu.edu.vn?Subject=Suggestion%20for%20using"
+        target="_top">Viem Trieu</a></p>
+  </div>
+</section>
 {% endblock %}

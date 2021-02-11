@@ -27,30 +27,22 @@ indexPage = Blueprint("index", __name__, template_folder="templates")
 
 @indexPage.route("/")
 def index():
-    # user = current_user
-    # if user: # neu nguoi dung da dang nhap chuyen den trang home tuong ung quyen
-    #     print("User is_authenticated()")
-    # else:
-    #     print("User NOT is_authenticated()")
     return render_template("index.html", hasNavbar=True)
 
 
 @userPage.route("/login", methods=["GET", "POST"])
 def login():
+    # Bypass if user is logged in
+    if current_user.is_authenticated:
+        return redirect(url_for("user.home"))
+
     form = LoginForm()
     if request.method == "POST" and form.validate_on_submit():
         user = User.query.filter_by(username=form.user_name.data).first()
         if isinstance(user, User) and user.verify_password(form.password.data):
             if user.confirmed:
                 login_user(user, remember=form.remember.data)
-                if user.role == RoleType.ADMI:
-                    return redirect(url_for("admin.home"))
-                elif user.role == RoleType.LECT:
-                    return redirect(url_for("lecturer.home"))
-                elif user.role == RoleType.STUD:
-                    return redirect(url_for("student.home"))
-                else:
-                    return abort(403)
+                return redirect(url_for("user.home"))
             else:
                 flash("Tài khoản chưa xác nhận qua email", "warning")
                 return render_template("login.html", form=form)
@@ -62,6 +54,9 @@ def login():
 
 @userPage.route("/register", methods=["GET", "POST"])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("user.home"))
+
     register_form = RegisterForm()
     # session.pop("_flashes", None)  # Clear flash message when GET signup form
     if register_form.validate_on_submit() and request.method == "POST":
@@ -98,7 +93,7 @@ def register():
         # mark user with signed in status
         # login_user(newUser)
 
-        flash("Người dùng đã được tạo, bạn hãy xác nhận qua email", "info")
+        flash("Người dùng đã được tạo, bạn hãy xác nhận qua email", "success")
         return redirect(url_for("index.index"))
     return render_template("signup.html", hasNavbar=False, form=register_form)
 
@@ -114,7 +109,7 @@ def confirm_email(token):
         return redirect(url_for("index.index"))
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
-        flash("Tài khoản đã kích hoạt trước đó, hãy đăng nhập!", "success")
+        flash("Tài khoản đã kích hoạt trước đó, hãy đăng nhập!", "info")
     else:
         user.confirmed = True
         user.confirmed_on = datetime.now()
@@ -146,10 +141,10 @@ def resend_email_confirm():
                 )
                 subject = "Again! Please confirm email with Kwesan-Sys"
                 send_email(subject, user.email, html)
-                flash("Đã gửi lại email kích hoạt!", "success")
+                flash("Đã gửi lại email kích hoạt!", "info")
                 return redirect(url_for("index.index"))
             else:
-                flash("Tài khoản đã kích hoạt trước đó, hãy đăng nhập!", "success")
+                flash("Tài khoản đã kích hoạt trước đó, hãy đăng nhập!", "info")
                 return redirect(url_for("user.login"))
     else:
         return render_template("reactivate.html")
@@ -217,7 +212,7 @@ def reset_pwd_with_form():
 
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
-            flash("Email chưa đăng ký người dùng")
+            flash("Email chưa đăng ký người dùng", "warning")
             return redirect(url_for("index.index"), hasNavbar=True)
 
         user.set_password(form.password.data)
@@ -225,7 +220,7 @@ def reset_pwd_with_form():
         db.session.commit()
         session.pop("username", None)
         session.pop("email", None)
-        flash("Thay đổi mật khẩu thành công")
+        flash("Thay đổi mật khẩu thành công", "success")
         return redirect(url_for("user.login"))
     abort(405)
 

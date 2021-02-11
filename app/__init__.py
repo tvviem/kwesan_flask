@@ -1,4 +1,4 @@
-from flask import Flask, url_for
+from flask import Flask, url_for, render_template
 
 from .routes.admin import adminRoutes
 from .routes.lecturer import lecturerRoutes
@@ -27,19 +27,50 @@ def create_app(config_name):
     # print(app.config["SQLALCHEMY_DATABASE_URI"])
 
     with app.app_context():
+        db.create_all()
         app.register_blueprint(indexPage)
         app.register_blueprint(userPage, url_prefix="/user/")
         app.register_blueprint(adminRoutes, url_prefix="/admin/")
         app.register_blueprint(lecturerRoutes, url_prefix="/lecturer/")
         app.register_blueprint(studentRoutes, url_prefix="/student/")
         app.register_blueprint(api, url_prefix="/api/")
-        login_manager.login_view = url_for(
-            "user.login"
-        )  # have to set SERVER_NAME in .env
+        app.register_error_handler(403, forbidden_page)
+        app.register_error_handler(404, page_not_found)
+        app.register_error_handler(405, method_not_allowed)
+        app.register_error_handler(500, server_error_page)
 
     return app
+
+
+# @app.errorhandler(403)
+def forbidden_page(error):
+    return render_template("errors/403.html", title="Unauthorized_403"), 403
+
+
+# @app.errorhandler(404)
+def page_not_found(error):
+    return render_template("errors/404.html", title="Not_found_404"), 404
+
+
+# @app.errorhandler(405)
+def method_not_allowed(error):
+    return render_template("errors/405.html", title="Method_not_allowed_405"), 405
+
+
+# @app.errorhandler(500)
+def server_error_page(error):
+    return render_template("errors/500.html", title="Internal_server_error_500"), 500
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    """Redirect unauthorized users to Login page."""
+    from flask import flash, redirect
+
+    flash("Cần đăng nhập để truy xuất", "warning")
+    return redirect(url_for("user.login"))

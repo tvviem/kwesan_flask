@@ -10,10 +10,24 @@ load_dotenv(dotenv_path)
 
 
 class Config:
-    SERVER_NAME = os.environ.get("SERVER_NAME", "localhost")
+    # SERVER_NAME = os.environ.get("SERVER_NAME", "localhost:5000")
+    # SESSION_COOKIE_DOMAIN = os.environ.get("SESSION_COOKIE_DOMAIN")
     SECRET_KEY = os.environ.get(
         "SECRET_KEY", "U can use os.urandom(32) to generate random key"
     )
+    SESSION_COOKIE_NAME = os.environ.get("SESSION_COOKIE_NAME", "sess-kwe")
+    SESSION_COOKIE_SAMESITE = os.environ.get("SESSION_COOKIE_SAMESITE", "Lax")
+    SESSION_COOKIE_HTTPONLY = os.environ.get("SESSION_COOKIE_HTTPONLY").lower() in [
+        "true",
+        "1",
+        "y",
+    ]
+    REMEMBER_COOKIE_HTTPONLY = os.environ.get("REMEMBER_COOKIE_HTTPONLY").lower() in [
+        "true",
+        "1",
+        "y",
+    ]
+
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = int(
         os.environ.get("MAIL_PORT", "587")
@@ -26,8 +40,6 @@ class Config:
     SECURITY_PASSWORD_SALT = os.environ.get(
         "SECURITY_PASSWORD_SALT", "salt_hard_guess_oke"
     )
-    MAIL_SUBJECT_PREFIX = os.environ.get("MAIL_SUBJECT_PREFIX", "[admin_from_kwesan_sys]")
-    KWESAN_SYS_ADMIN = os.environ.get("KWESAN_SYS_ADMIN", "trieu_vinh_viem")
     RECAPTCHA_PUBLIC_KEY = os.environ.get("RECAPTCHA_PUBLIC_KEY")
     RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
 
@@ -57,6 +69,17 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
+    # when use https to send cookie, true
+    SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE").lower() in [
+        "true",
+        "1",
+        "y",
+    ]
+    REMEMBER_COOKIE_SECURE = os.environ.get("REMEMBER_COOKIE_SECURE").lower() in [
+        "true",
+        "1",
+        "y",
+    ]
     SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get(
         "SQLALCHEMY_TRACK_MODIFICATIONS", False
     )
