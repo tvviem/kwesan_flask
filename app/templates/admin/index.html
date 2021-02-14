@@ -7,7 +7,7 @@
       <aside class="menu">
         <p class="menu-label">Quản lý chung</p>
         <ul class="menu-list">
-          <li><a class="is-active">Tổng quan</a></li>
+          <li><a class="is-active" id="general">Tổng quan</a></li>
           <li><a href="#">Người dùng</a></li>
           <li><a>Câu hỏi</a></li>
         </ul>
@@ -24,13 +24,54 @@
       </aside>
     </div>
     <div class="column is-10-desktop is-9-tablet">
-      Second column
-      {% if current_user.is_authenticated %}
-      <h1 class="title">Hi ADMIN {{ current_user.name }}!</h1>
-      {% else %}
-      <h1 class="title">ANONYMOUS USER</h1>
-      {% endif %}
+      <div id="content"></div>
     </div>
   </div>
 </section>
+{% endblock %}
+{% block js %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  // $(document).ready(function () {
+  //   $("#content").text("This is jquery add text");
+  // });
+  document.addEventListener('DOMContentLoaded', function (event) {
+    console.log("KO quan tam style and image loaded!")
+    document.getElementById("content").innerText = "This is vanilla JS"
+  });
+  document.onreadystatechange = function (event) {
+    if (document.readyState === "complete") {
+      // fetch(window.origin + '/admin/general-content').then(function (response) {
+      //   return response.text();
+      // }).then(function (html) {
+      //   // Convert the HTML string into a document object
+      //   var parser = new DOMParser();
+      //   var doc = parser.parseFromString(html, 'text/html');
+      //   // Get the image file
+      //   // var img = doc.querySelector('img');
+      //   console.log(html);
+      //   document.getElementById("content").replaceWith(doc.querySelector('h1'))
+      // }).catch(function (err) {
+      //   console.warn('Something went wrong.', err);
+      // });
+      makeGetRequest()
+    }
+  };
+
+  function makeGetRequest() {
+    axios.get(window.origin + "/admin/general-content").then(
+      (response) => {
+        var parser = new DOMParser();
+        var result = parser.parseFromString(response.data, 'text/html');
+        document.getElementById("content").replaceWith(result.querySelector('h1'))
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+  // makeGetRequest('http://127.0.0.1:5000/test');
+
+</script>
 {% endblock %}

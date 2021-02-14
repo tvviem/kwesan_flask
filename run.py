@@ -14,8 +14,10 @@ app = create_app("development")
 # NOTICE: REVIEW it
 @app.before_request
 def make_session_permanent():
+    # Trong khoang thoi gian M phut
+    # neu nguoi dung ko co tuong tac (REQUEST) thi SE TU DONG LOGOUT
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=4)
+    app.permanent_session_lifetime = timedelta(minutes=30)
 
 
 @app.before_first_request

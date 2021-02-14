@@ -34,6 +34,7 @@ def create_app(config_name):
         app.register_blueprint(lecturerRoutes, url_prefix="/lecturer/")
         app.register_blueprint(studentRoutes, url_prefix="/student/")
         app.register_blueprint(api, url_prefix="/api/")
+        # app.register_error_handler(401, unauthorized_page)
         app.register_error_handler(403, forbidden_page)
         app.register_error_handler(404, page_not_found)
         app.register_error_handler(405, method_not_allowed)
@@ -42,9 +43,13 @@ def create_app(config_name):
     return app
 
 
+# def unauthorized_page(error):
+#     return render_template("errors/401.html", title="Unauthorized_401"), 401
+
+
 # @app.errorhandler(403)
 def forbidden_page(error):
-    return render_template("errors/403.html", title="Unauthorized_403"), 403
+    return render_template("errors/403.html", title="Forbidden_403"), 403
 
 
 # @app.errorhandler(404)

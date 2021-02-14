@@ -31,9 +31,24 @@ def confirm_token(token, expiration=3600):
     return email
 
 
+def send_async_email(app, msg):
+    from time import sleep
+
+    with app.app_context():
+        # block only for testing parallel thread
+        for i in range(10, -1, -1):
+            sleep(2)  # COUNTDOWN 2 seconds * 10 times = after 20 seconds, email-sent
+        mail.send(msg)
+
+
 def send_email(subject, to, template):
+    from threading import Thread
+
     try:
         msg = Message(subject=subject, recipients=[to], html=template)
-        mail.send(msg)
+        # mail.send(msg)
+        thr = Thread(target=send_async_email, args=[app._get_current_object(), msg])
+        thr.start()
+        return thr
     except Exception as e:
-        print("Loi gui email: ", e)
+        print("ERROR - SEND EMAIL ASYNCHRONOUSLY: ", e)
