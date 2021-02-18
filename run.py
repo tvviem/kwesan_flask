@@ -22,7 +22,7 @@ def make_session_permanent():
 
 @app.before_first_request
 def create_db_default_admin_user():
-    admin_exist = User.query.filter(User.id == 1, User.role == RoleType.ADMI).first()
+    admin_exist = User.query.filter((User.id == 1) | (User.role == RoleType.ADMI)).first()
     if admin_exist is None:
         db.session.add(
             User(
@@ -50,4 +50,5 @@ def create_db_default_admin_user():
 
 
 if __name__ == "__main__":
+    # app.run(threaded=True)
     app.run()

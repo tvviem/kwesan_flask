@@ -24,6 +24,9 @@
       </aside>
     </div>
     <div class="column is-10-desktop is-9-tablet">
+      {% include 'admin/mainshow.html' ignore missing with context %}
+
+      <div id="ssedata"></div>
       <div id="content"></div>
     </div>
   </div>
@@ -33,9 +36,6 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-  // $(document).ready(function () {
-  //   $("#content").text("This is jquery add text");
-  // });
   document.addEventListener('DOMContentLoaded', function (event) {
     console.log("KO quan tam style and image loaded!")
     document.getElementById("content").innerText = "This is vanilla JS"
@@ -73,5 +73,19 @@
   }
   // makeGetRequest('http://127.0.0.1:5000/test');
 
+  var eventSource = new EventSource(window.origin + "/admin/stats-data")
+
+  // eventSource.addEventListener("message", function(e) {
+  //   console.log(e.data)
+  // }, false)
+
+  eventSource.addEventListener("user-created", function(e) {
+    // console.log(e.data.color)
+    // data = JSON.parse(e.data)
+    document.querySelector("#sse_user_created").innerText = e.data
+  }, true)
+  eventSource.addEventListener("question-created", function(e) {
+    document.querySelector("#sse_question_created").innerText = e.data
+  }, true)
 </script>
 {% endblock %}

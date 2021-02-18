@@ -90,8 +90,10 @@ def register():
         subject = "Please confirm email with Kwesan-Sys!"
         send_email(subject, newUser.email, html)
 
-        # mark user with signed in status
-        # login_user(newUser)
+        from extensions import announcer # notify admin dashboard
+        from ..util import sse
+        msg = sse.format_sse(data='user_created', event='user-created')
+        announcer.announce(msg=msg)
 
         flash("Người dùng đã được tạo, bạn hãy xác nhận qua email", "success")
         return redirect(url_for("index.index"))
