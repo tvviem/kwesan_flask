@@ -26,7 +26,6 @@
     <div class="column is-10-desktop is-9-tablet">
       {% include 'admin/mainshow.html' ignore missing with context %}
 
-      <div id="ssedata"></div>
       <div id="content"></div>
     </div>
   </div>
@@ -42,19 +41,6 @@
   });
   document.onreadystatechange = function (event) {
     if (document.readyState === "complete") {
-      // fetch(window.origin + '/admin/general-content').then(function (response) {
-      //   return response.text();
-      // }).then(function (html) {
-      //   // Convert the HTML string into a document object
-      //   var parser = new DOMParser();
-      //   var doc = parser.parseFromString(html, 'text/html');
-      //   // Get the image file
-      //   // var img = doc.querySelector('img');
-      //   console.log(html);
-      //   document.getElementById("content").replaceWith(doc.querySelector('h1'))
-      // }).catch(function (err) {
-      //   console.warn('Something went wrong.', err);
-      // });
       makeGetRequest()
     }
   };
@@ -72,20 +58,27 @@
     );
   }
   // makeGetRequest('http://127.0.0.1:5000/test');
+  try {
+    var eventSource = new EventSource(window.origin + "/admin/stats-data")
 
-  var eventSource = new EventSource(window.origin + "/admin/stats-data")
+    eventSource.addEventListener("user-created", function(e) {
+      // console.log(e.data.color)
+      // data = JSON.parse(e.data)
+      document.querySelector("#sse_student_register").innerText = e.data
+    }, true)
+    eventSource.addEventListener("question-created", function(e) {
+      document.querySelector("#sse_question_created").innerText = e.data
+    }, true)
 
-  // eventSource.addEventListener("message", function(e) {
-  //   console.log(e.data)
-  // }, false)
+  } catch (error) {
+    console.log('cannot listen to from sse service')
+  }
 
-  eventSource.addEventListener("user-created", function(e) {
-    // console.log(e.data.color)
-    // data = JSON.parse(e.data)
-    document.querySelector("#sse_user_created").innerText = e.data
-  }, true)
-  eventSource.addEventListener("question-created", function(e) {
-    document.querySelector("#sse_question_created").innerText = e.data
-  }, true)
+  // $(document).ready(function(){
+  //   $('ul li a').click(function(){
+  //     $('li a').removeClass("is-active");
+  //     $(this).addClass("is-active");
+  //   });
+  // });
 </script>
 {% endblock %}

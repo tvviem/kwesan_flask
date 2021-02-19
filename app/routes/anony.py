@@ -7,6 +7,7 @@ from flask import (
     flash,
     session,
     abort,
+    current_app as app
 )
 from ..forms.signup_form import RegisterForm, MAJOR_CHOICES
 from ..forms.login_form import LoginForm
@@ -42,6 +43,7 @@ def login():
         if isinstance(user, User) and user.verify_password(form.password.data):
             if user.confirmed:
                 login_user(user, remember=form.remember.data)
+                app.logger.info('User '+ user.username + ' signed in')
                 return redirect(url_for("user.home"))
             else:
                 flash("Tài khoản chưa xác nhận qua email", "warning")

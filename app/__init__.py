@@ -10,6 +10,24 @@ from extensions import db, bcrypt, login_manager, mail
 from .models import User
 
 
+def init_logging(curApp):
+    for handler in curApp.logger.handlers:
+        curApp.logger.removeHandler(handler)
+
+    # logging.basicConfig(filename='kwesansys.log', level=logging.INFO, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+
+    import os, logging
+    root = os.path.dirname(os.path.abspath(__file__))
+    logdir = os.path.join(root, 'logs')
+    if not os.path.exists(logdir):
+        os.mkdir(logdir)
+    log_file = os.path.join(logdir, 'kwesansys.log')
+    handler = logging.FileHandler(log_file)
+    handler.setLevel(logging.INFO)
+    from logging import Formatter
+    handler.setFormatter(Formatter(f'%(asctime)s %(levelname)s %(name)s : %(message)s', datefmt="%Y-%m-%d %H:%M:%S"))
+    curApp.logger.addHandler(handler)
+
 def create_app(config_name):
     # static_url_path set for showing client, static_folder for server directory
     app = Flask(__name__, static_url_path="/public", static_folder="static")
@@ -24,6 +42,9 @@ def create_app(config_name):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+
+    init_logging(curApp=app)
+
     # print(app.config["SQLALCHEMY_DATABASE_URI"])
 
     with app.app_context():

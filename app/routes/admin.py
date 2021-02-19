@@ -19,7 +19,7 @@ def home():
 @login_required
 @is_admin
 def load_general_content():
-    return "<h1>Truy vấn nội dung tổng quát về hệ thống</h1>"
+    return "<h1>Truy vấn về hệ thống - Output CHART</h1>"
 
 
 @adminRoutes.route("/stats-data")
@@ -37,3 +37,9 @@ def stats_data():
             time.sleep(2.0)
 
     return Response(stream(), mimetype='text/event-stream')
+
+@adminRoutes.route("/manage-users")
+@is_admin
+def manage_users():
+
+    return render_template("")

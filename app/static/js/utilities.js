@@ -23,26 +23,4 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-  // (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-  //   const $notification = $delete.parentNode;
-
-  //   $delete.addEventListener('click', () => {
-  //     $notification.parentNode.removeChild($notification);
-  //   });
-  // });
 });
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   (document.querySelectorAll('.notification * .delete') || []).forEach(($delete) => {
-//     const $notification = $delete.parentNode;
-
-//     $delete.addEventListener('click', () => {
-//       $notification.parentNode.removeChild($notification);
-//     });
-//   });
-// });
-
-// $(document).on('click', '.notification > button.delete', function() {
-//   $(this).parent().addClass('is-hidden');
-//   return false;
-// });
