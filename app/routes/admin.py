@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, Response
+from flask import Blueprint, render_template, Response, jsonify
 from flask_login import login_required
 from ..decorators import is_admin
 from ..util import sse
@@ -19,7 +19,35 @@ def home():
 @login_required
 @is_admin
 def load_general_content():
-    return "<h1>Truy vấn về hệ thống - Output CHART</h1>"
+    template_rendered = render_template("admin/mainshow.html")
+    # print(template_rendered)
+    response_object = {
+          "status": "success",
+          "message": "success",
+          "data": {"content": template_rendered}
+    }
+    return jsonify(response_object)
+    # return "<div id='content'><h1>Truy vấn về hệ thống - Output CHART</h1></div>"
+
+
+@adminRoutes.route("/manage-users")
+@is_admin
+def manage_users():
+    template_rendered = render_template("admin/manage_users.html")
+
+    response_object = {
+          "status": "success",
+          "data": {"content": template_rendered}
+    }
+    return jsonify(response_object)
+
+    # return Response(render_template("admin/manage_users.html", mimetype='text/html'))
+
+@adminRoutes.route("/manage-questions")
+@is_admin
+def manage_questions():
+
+    return  render_template("admin/manage_users.html")
 
 
 @adminRoutes.route("/stats-data")
@@ -37,9 +65,3 @@ def stats_data():
             time.sleep(2.0)
 
     return Response(stream(), mimetype='text/event-stream')
-
-@adminRoutes.route("/manage-users")
-@is_admin
-def manage_users():
-
-    return render_template("")

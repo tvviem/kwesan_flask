@@ -7,9 +7,9 @@
       <aside class="menu">
         <p class="menu-label">Quản lý chung</p>
         <ul class="menu-list">
-          <li><a class="is-active" id="general">Tổng quan</a></li>
-          <li><a href="#">Người dùng</a></li>
-          <li><a>Câu hỏi</a></li>
+          <li><a class="is-active" onclick="getUiGeneralContent(event)" id="general">Tổng quan</a></li>
+          <li><a onclick="getUiManageUsers(event)">Người dùng</a></li>
+          <li><a href="{{ url_for('admin.manage_questions') }}">Câu hỏi</a></li>
         </ul>
         <p class="menu-label">Đặc quyền</p>
         <ul class="menu-list">
@@ -24,9 +24,9 @@
       </aside>
     </div>
     <div class="column is-10-desktop is-9-tablet">
-      {% include 'admin/mainshow.html' ignore missing with context %}
-
-      <div id="content"></div>
+      <div id="ajax-data">
+        <!-- {% include 'admin/mainshow.html' ignore missing with context %} -->
+      </div>
     </div>
   </div>
 </section>
@@ -37,20 +37,21 @@
 <script>
   document.addEventListener('DOMContentLoaded', function (event) {
     console.log("KO quan tam style and image loaded!")
-    document.getElementById("content").innerText = "This is vanilla JS"
+    // document.getElementById("content").innerText = "This is vanilla JS"
   });
   document.onreadystatechange = function (event) {
     if (document.readyState === "complete") {
-      makeGetRequest()
+      makeGetRequest('/admin/general-content')
     }
   };
 
-  function makeGetRequest() {
-    axios.get(window.origin + "/admin/general-content").then(
+  function makeGetRequest(relativeLink) {
+    axios.get(window.origin + relativeLink).then(
       (response) => {
-        var parser = new DOMParser();
-        var result = parser.parseFromString(response.data, 'text/html');
-        document.getElementById("content").replaceWith(result.querySelector('h1'))
+        let parser = new DOMParser();
+        let result = parser.parseFromString(response.data.data.content, 'text/html');
+        let currentNode = document.querySelector('#ajax-data');
+        currentNode.replaceWith(result.querySelector('#ajax-data'))
       },
       (error) => {
         console.log(error);
@@ -72,6 +73,30 @@
 
   } catch (error) {
     console.log('cannot listen to from sse service')
+  }
+
+  var quickLinks = document.querySelectorAll(".menu-list a");
+  for (var i=0; i<quickLinks.length; i++){
+      quickLinks[i].addEventListener('click', function(event){
+
+          //check if a link is currently selected, remove is-active class if yes
+          isActive = document.getElementsByClassName('is-active')[0];
+          if (isActive != undefined){
+              isActive.classList.remove('is-active');
+          }
+          //then add is-active class to the most recent selected link
+          // object current call this event
+          this.classList.add('is-active');
+      });
+  }
+
+  function getUiGeneralContent(event) {
+    makeGetRequest('/admin/general-content')
+    event.preventDefault();
+  }
+  function getUiManageUsers(event) {
+    makeGetRequest('/admin/manage-users')
+    event.preventDefault();
   }
 
   // $(document).ready(function(){
