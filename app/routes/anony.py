@@ -7,7 +7,7 @@ from flask import (
     flash,
     session,
     abort,
-    current_app as app
+    current_app as app,
 )
 from ..forms.signup_form import RegisterForm, MAJOR_CHOICES
 from ..forms.login_form import LoginForm
@@ -43,7 +43,7 @@ def login():
         if isinstance(user, User) and user.verify_password(form.password.data):
             if user.confirmed:
                 login_user(user, remember=form.remember.data)
-                app.logger.info('User '+ user.username + ' signed in')
+                app.logger.info("User " + user.username + " signed in")
                 return redirect(url_for("user.home"))
             else:
                 flash("Tài khoản chưa xác nhận qua email", "warning")
@@ -78,7 +78,9 @@ def register():
             register_form.password.data,
             dict(MAJOR_CHOICES).get(register_form.major.data),
             register_form.about_user.data,
-            RoleType.STUD,
+            RoleType.STUD
+            if not register_form.user_role
+            else register_form.user_role.data,
             confirmed=False,
         )
         db.session.add(newUser)
@@ -92,9 +94,10 @@ def register():
         subject = "Please confirm email with Kwesan-Sys!"
         send_email(subject, newUser.email, html)
 
-        from extensions import announcer # notify admin dashboard
+        from extensions import announcer  # notify admin dashboard
         from ..util import sse
-        msg = sse.format_sse(data='user_created', event='user-created')
+
+        msg = sse.format_sse(data="user_created", event="user-created")
         announcer.announce(msg=msg)
 
         flash("Người dùng đã được tạo, bạn hãy xác nhận qua email", "success")

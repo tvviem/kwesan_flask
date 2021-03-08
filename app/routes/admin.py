@@ -4,9 +4,11 @@ from ..decorators import is_admin
 from ..util import sse
 import time
 from extensions import announcer
+from ..forms.signup_form import RegisterForm
 
 adminRoutes = Blueprint("admin", __name__, template_folder="../templates")
 counter = 11
+
 
 @adminRoutes.route("/")
 @login_required
@@ -22,39 +24,34 @@ def load_general_content():
     template_rendered = render_template("admin/mainshow.html")
     # print(template_rendered)
     response_object = {
-          "status": "success",
-          "message": "success",
-          "data": {"content": template_rendered}
+        "status": "success",
+        "message": "success",  # add info get num of user if want
+        "data": {"content": template_rendered},
     }
     return jsonify(response_object)
-    # return "<div id='content'><h1>Truy vấn về hệ thống - Output CHART</h1></div>"
 
 
 @adminRoutes.route("/manage-users")
 @is_admin
 def manage_users():
-    template_rendered = render_template("admin/manage_users.html")
+    form = RegisterForm()
+    template_rendered = render_template("admin/manage_users.html", form=form)
 
-    response_object = {
-          "status": "success",
-          "data": {"content": template_rendered}
-    }
+    response_object = {"status": "success", "data": {"content": template_rendered}}
     return jsonify(response_object)
 
-    # return Response(render_template("admin/manage_users.html", mimetype='text/html'))
 
 @adminRoutes.route("/manage-questions")
 @is_admin
 def manage_questions():
 
-    return  render_template("admin/manage_users.html")
+    return render_template("admin/manage_users.html")
 
 
 @adminRoutes.route("/stats-data")
 @login_required
 @is_admin
 def stats_data():
-
     def stream():
         messages = announcer.listen()  # returns a queue.Queue
         while True:
@@ -64,4 +61,4 @@ def stats_data():
             yield msg
             time.sleep(2.0)
 
-    return Response(stream(), mimetype='text/event-stream')
+    return Response(stream(), mimetype="text/event-stream")

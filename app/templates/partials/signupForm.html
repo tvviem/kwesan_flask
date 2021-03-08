@@ -4,7 +4,7 @@
     <div class="container">
       <div class="columns is-centered is-mobile">
         <div class="column is-6-tablet is-8-desktop is-6-widescreen is-two-thirds-mobile box">
-          <h4 class="title is-4 has-text-centered">ĐĂNG KÝ NGƯỜI DÙNG</h4>
+          {% block titleForm %}<h4 class="title is-4 has-text-centered">ĐĂNG KÝ NGƯỜI DÙNG</h4>{% endblock %}
           {% include 'partials/messages.html' ignore missing with context %}
           <form action="{{ url_for('user.register') }}" method="POST">
             {{ form.csrf_token }}
@@ -76,6 +76,8 @@
                 {{ form.about_user(class="textarea is-info") }}
               </div>
             </div>
+            {% block roleControl %}
+            {% endblock %}
             <div class="field">
               {{ form.recaptcha }}
               {{ render_error(form.recaptcha) }}

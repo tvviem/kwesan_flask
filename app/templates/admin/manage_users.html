@@ -1,7 +1,25 @@
 <div id='ajax-data'>
-    <section id='users'>
-        <form action="{{ url_for('admin.load_general_content') }}" method="POST">
-            <input type="text" name="username" id="">
-        </form>
+    <section id='addUser'>
+        {% extends 'partials/signupForm.html' %}
+        {% block titleForm %} <h4 class="title is-5 has-text-centered">Tạo người dùng</h4> {% endblock %}
+        {% block roleControl %}
+        <div class="field is-grouped">
+            <label class="label mr-3" for="user_role"> {{ form.user_role.label() }} </label>
+            <div class="control">
+                <label class="radio">
+                    <input type="radio" name="user_role" value="1" checked>
+                    Sinh viên
+                </label>
+                <label class="radio">
+                    <input type="radio" name="user_role" value="2">
+                    Giảng viên
+                </label>
+            </div>
+        </div>
+        {{ render_error(form.user_role) }}
+        {% endblock %}
     </section>
 </div>
+<style>
+
+</style>

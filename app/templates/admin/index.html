@@ -23,10 +23,10 @@
         </ul>
       </aside>
     </div>
-    <div class="column is-10-desktop is-9-tablet">
-      <div id="ajax-data">
-        <!-- {% include 'admin/mainshow.html' ignore missing with context %} -->
-      </div>
+    <div class="column is-10-desktop is-9-tablet" id="ajax-data">
+      <!-- <div id="ajax-data"> -->
+      <!-- {% include 'admin/mainshow.html' ignore missing with context %} -->
+      <!-- </div> -->
     </div>
   </div>
 </section>
@@ -51,7 +51,10 @@
         let parser = new DOMParser();
         let result = parser.parseFromString(response.data.data.content, 'text/html');
         let currentNode = document.querySelector('#ajax-data');
-        currentNode.replaceWith(result.querySelector('#ajax-data'))
+        currentNode.innerHTML = result.querySelector('#ajax-data').innerHTML
+        // currentNode.insertAdjacentHTML("afterbegin", result.querySelector('#ajax-data').innerHTML)
+        // innerHTML faster replaceWith
+        // currentNode.replaceWith(result.querySelector('#ajax-data'))
       },
       (error) => {
         console.log(error);
@@ -62,12 +65,12 @@
   try {
     var eventSource = new EventSource(window.origin + "/admin/stats-data")
 
-    eventSource.addEventListener("user-created", function(e) {
+    eventSource.addEventListener("user-created", function (e) {
       // console.log(e.data.color)
       // data = JSON.parse(e.data)
       document.querySelector("#sse_student_register").innerText = e.data
     }, true)
-    eventSource.addEventListener("question-created", function(e) {
+    eventSource.addEventListener("question-created", function (e) {
       document.querySelector("#sse_question_created").innerText = e.data
     }, true)
 
@@ -76,23 +79,23 @@
   }
 
   var quickLinks = document.querySelectorAll(".menu-list a");
-  for (var i=0; i<quickLinks.length; i++){
-      quickLinks[i].addEventListener('click', function(event){
+  for (var i = 0; i < quickLinks.length; i++) {
+    quickLinks[i].addEventListener('click', function (event) {
 
-          //check if a link is currently selected, remove is-active class if yes
-          isActive = document.getElementsByClassName('is-active')[0];
-          if (isActive != undefined){
-              isActive.classList.remove('is-active');
-          }
-          //then add is-active class to the most recent selected link
-          // object current call this event
-          this.classList.add('is-active');
-      });
+      //check if a link is currently selected, remove is-active class if yes
+      isActive = document.getElementsByClassName('is-active')[0];
+      if (isActive != undefined) {
+        isActive.classList.remove('is-active');
+      }
+      //then add is-active class to the most recent selected link
+      // object current call this event
+      this.classList.add('is-active');
+    });
   }
 
   function getUiGeneralContent(event) {
-    makeGetRequest('/admin/general-content')
     event.preventDefault();
+    makeGetRequest('/admin/general-content')
   }
   function getUiManageUsers(event) {
     makeGetRequest('/admin/manage-users')

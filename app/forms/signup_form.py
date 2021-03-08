@@ -1,5 +1,13 @@
 from flask_wtf import FlaskForm, RecaptchaField, Recaptcha
-from wtforms import StringField, PasswordField, SelectField, TextAreaField, SubmitField
+from wtforms import (
+    StringField,
+    PasswordField,
+    SelectField,
+    TextAreaField,
+    SubmitField,
+    BooleanField,
+    IntegerField,
+)
 from wtforms.validators import (
     DataRequired,
     Email,
@@ -83,7 +91,7 @@ class RegisterForm(FlaskForm):
             "autofocus": True,
             "autocomplete": True,
             "placeholder": "Xác nhận mật khẩu",
-            "required": True
+            "required": True,
         },
     )
     major = SelectField("Ngành học", choices=MAJOR_CHOICES)
@@ -94,6 +102,7 @@ class RegisterForm(FlaskForm):
             "placeholder": "Sinh viên năm mấy? Khoa, trường học?",
         },
     )
+    user_role = IntegerField("Vai trò")
     recaptcha = RecaptchaField(
         validators=[Recaptcha(message="Hãy xác nhận bạn ko là robot")]
     )
